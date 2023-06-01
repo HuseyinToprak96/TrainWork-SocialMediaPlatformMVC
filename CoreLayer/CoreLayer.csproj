@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,16 +44,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dtos\GenericDtos\CustomResponseDto.cs" />
+    <Compile Include="Dtos\GenericDtos\NoContentDto.cs" />
+    <Compile Include="Dtos\User\CreateUserDto.cs" />
+    <Compile Include="Dtos\User\LoginDto.cs" />
+    <Compile Include="Dtos\User\UserListDto.cs" />
     <Compile Include="Entities\Base.cs" />
+    <Compile Include="Entities\Shared\Comment.cs" />
+    <Compile Include="Entities\Shared\SharedLike.cs" />
+    <Compile Include="Entities\User\FriendRequest.cs" />
     <Compile Include="Entities\HelperTables\City.cs" />
     <Compile Include="Entities\HelperTables\District.cs" />
-    <Compile Include="Entities\Role.cs" />
-    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\User\Role.cs" />
+    <Compile Include="Entities\Shared\Shared.cs" />
+    <Compile Include="Entities\User\User.cs" />
+    <Compile Include="Entities\User\UserProfileImages.cs" />
+    <Compile Include="Interfaces\IGenericRepository.cs" />
+    <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Dtos\" />
-    <Folder Include="Interfaces\" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

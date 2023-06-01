@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLayer.Entities
+namespace CoreLayer.Entities.User
 {
     public class Role
     {

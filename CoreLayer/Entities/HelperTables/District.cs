@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLayer.Entities.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace CoreLayer.Entities.HelperTables
         public string Name { get; set; }
         public int CityId { get; set; }
         public City City { get; set; }
+        public IEnumerable<User.User> Users { get; set; }
     }
 }

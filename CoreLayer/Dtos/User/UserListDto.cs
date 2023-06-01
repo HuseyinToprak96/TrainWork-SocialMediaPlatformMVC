@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLayer.Entities
+namespace CoreLayer.Dtos.User
 {
-    public class User:Base
+    public class UserListDto
     {
         public string Name { get; set; }
         public string Surname { get; set; }
-        public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public string RoleName { get; set; }
     }
 }
