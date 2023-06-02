@@ -210,6 +210,14 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoreLayer\CoreLayer.csproj">
+      <Project>{54c70ff2-11dd-4997-bd98-1925212cb6f1}</Project>
+      <Name>CoreLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RepositoryLayer\RepositoryLayer.csproj">
+      <Project>{c403d62c-523f-4dbf-9468-399c8d9f0bb8}</Project>
+      <Name>RepositoryLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj">
       <Project>{e4f04054-2228-4778-91b1-e775ff2cca06}</Project>
       <Name>ServiceLayer</Name>

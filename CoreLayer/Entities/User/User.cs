@@ -25,8 +25,8 @@ namespace CoreLayer.Entities.User
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public IEnumerable<UserProfileImages> UserProfileImages { get; set; }
-        public IEnumerable<Follow> SendFriendRequests { get; set; }//Gönderilen istekler
-        public IEnumerable<Follow> ReceiverFriendRequest { get; set; }//Alınan istekler
+        public IEnumerable<Follow> Following { get; set; }//Takip Edilen
+        public IEnumerable<Follow> Followers { get; set; }//Takip Eden
         public IEnumerable<Shared.Shared> Shareds { get; set; }
         public IEnumerable<Shared.Comment> Comments { get; set; }
         public IEnumerable<Shared.SharedLike> Likes { get; set; }

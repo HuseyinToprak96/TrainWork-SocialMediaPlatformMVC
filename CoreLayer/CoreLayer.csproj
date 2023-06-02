@@ -46,24 +46,31 @@
   <ItemGroup>
     <Compile Include="Dtos\GenericDtos\CustomResponseDto.cs" />
     <Compile Include="Dtos\GenericDtos\NoContentDto.cs" />
+    <Compile Include="Dtos\Mail\MailDto.cs" />
+    <Compile Include="Dtos\Notification\NotificationDto.cs" />
     <Compile Include="Dtos\User\CreateUserDto.cs" />
     <Compile Include="Dtos\User\LoginDto.cs" />
     <Compile Include="Dtos\User\UserListDto.cs" />
+    <Compile Include="Entities\User\Follow.cs" />
+    <Compile Include="Enum\EGender.cs" />
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\Shared\Comment.cs" />
     <Compile Include="Entities\Shared\SharedLike.cs" />
-    <Compile Include="Entities\User\FriendRequest.cs" />
     <Compile Include="Entities\HelperTables\City.cs" />
     <Compile Include="Entities\HelperTables\District.cs" />
     <Compile Include="Entities\User\Role.cs" />
     <Compile Include="Entities\Shared\Shared.cs" />
     <Compile Include="Entities\User\User.cs" />
     <Compile Include="Entities\User\UserProfileImages.cs" />
+    <Compile Include="Enum\EStatusCode.cs" />
     <Compile Include="Interfaces\IGenericRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
+    <Compile Include="Entities\NotificationEntity\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Dtos\Shared\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

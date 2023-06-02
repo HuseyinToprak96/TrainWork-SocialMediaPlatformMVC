@@ -1,4 +1,5 @@
 ﻿using CoreLayer.Entities;
+using CoreLayer.Entities.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
