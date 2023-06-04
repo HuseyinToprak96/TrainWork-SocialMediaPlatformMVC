@@ -3,6 +3,7 @@ using CoreLayer.Entities.HelperTables;
 using CoreLayer.Entities.Notification;
 using CoreLayer.Entities.Shared;
 using CoreLayer.Entities.User;
+using RepositoryLayer.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -36,7 +37,16 @@ namespace RepositoryLayer.DataContext
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
+            modelBuilder.Configurations.Add(new UserConfiguration());
+            modelBuilder.Configurations.Add(new CityConfiguration());
+            modelBuilder.Configurations.Add(new CommentConfiguration());
+            modelBuilder.Configurations.Add(new DistrictConfiguration());
+            modelBuilder.Configurations.Add(new FollowConfiguration());
+            modelBuilder.Configurations.Add(new NotificationConfiguration());
+            modelBuilder.Configurations.Add(new RoleConfiguration());
+            modelBuilder.Configurations.Add(new SharedConfiguration());
+            modelBuilder.Configurations.Add(new SharedLikeConfiguration());
+            modelBuilder.Configurations.Add(new UserProfileImagesConfiguration());
             base.OnModelCreating(modelBuilder);
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)

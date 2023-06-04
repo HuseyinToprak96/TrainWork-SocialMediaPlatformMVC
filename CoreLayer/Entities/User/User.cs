@@ -19,7 +19,7 @@ namespace CoreLayer.Entities.User
         public string PhoneNumber { get; set; }
         public EGender Gender { get; set; }
         public string Biography { get; set; }
-        public int DistrictId { get; set; }
+        public int? DistrictId { get; set; }
         public District District { get; set; }
         public int? RoleId { get; set; }
         public Role Role { get; set; }
