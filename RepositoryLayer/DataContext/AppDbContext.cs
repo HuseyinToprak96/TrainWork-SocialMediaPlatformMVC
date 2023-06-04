@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer.DataContext
 {
-    internal class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         public AppDbContext() : base("dbConnection")
         {

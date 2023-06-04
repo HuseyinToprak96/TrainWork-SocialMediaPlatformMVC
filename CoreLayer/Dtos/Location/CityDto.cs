@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLayer.Dtos.User
+namespace CoreLayer.Dtos.Location
 {
-    internal class UserBiographyUpdate
+    public class CityDto
     {
         public int Id { get; set; }
-        public string Biography { get; set; }
+        public string Name { get; set; }
     }
 }

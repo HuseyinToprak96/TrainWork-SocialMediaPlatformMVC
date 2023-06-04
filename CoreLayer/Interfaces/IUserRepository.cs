@@ -10,5 +10,6 @@ namespace CoreLayer.Interfaces
 {
     public interface IUserRepository:IGenericRepository<User>
     {
+        Task<User> Login(string UsernameOrEmail);//Buradan dönen byte[] password ile girilen password kıyaslanacak
     }
 }

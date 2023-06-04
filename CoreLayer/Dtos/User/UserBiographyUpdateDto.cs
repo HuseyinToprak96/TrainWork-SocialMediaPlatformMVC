@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLayer.Dtos.Shared
+namespace CoreLayer.Dtos.User
 {
-    public class CommentAnswer
+    public class UserBiographyUpdateDto
     {
-        public int TopCommentId { get; set; }
-        public string Comment { get; set; }
         public int UserId { get; set; }
+        public string Biography { get; set; }
     }
 }

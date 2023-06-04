@@ -1,7 +1,6 @@
 ﻿using CoreLayer.Entities.HelperTables;
 using CoreLayer.Entities.Shared;
 using CoreLayer.Enum;
-using CoreLayer.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;

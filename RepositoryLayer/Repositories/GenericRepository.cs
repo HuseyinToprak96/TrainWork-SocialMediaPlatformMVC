@@ -10,48 +10,51 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer.Repositories
 {
-    internal class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private AppDbContext _db;
+        protected AppDbContext _db;
         private DbSet<T> _dbSet;
         public GenericRepository()
         {
             _db = new AppDbContext();
             _dbSet=_db.Set<T>();
         }
-        public void Add(T entity)
+        public async Task AddAsync(T entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Add(entity);
+            await _db.SaveChangesAsync() ;
         }
 
-        public bool Any(Expression<Func<T, bool>> expression)
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AnyAsync(expression);
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(_dbSet.Find(id));
+            await _db.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet.ToListAsync();
         }
 
-        public T GetT(int id)
+        public async Task<T> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
-            throw new NotImplementedException();
+            _db.Entry(entity).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
         }
 
         public IQueryable<T> Where(Expression<Func<T, bool>> expression)
         {
-            throw new NotImplementedException();
+            return _dbSet.Where(expression);
         }
     }
 }
