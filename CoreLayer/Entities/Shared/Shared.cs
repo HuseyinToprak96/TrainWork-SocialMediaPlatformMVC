@@ -1,4 +1,5 @@
 ﻿using CoreLayer.Entities.User;
+using CoreLayer.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,9 @@ namespace CoreLayer.Entities.Shared
         public string Path { get; set; }
         public int? UserId { get; set; }
         public User.User User { get; set; }
+        public EFileType Type { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
         public IEnumerable<SharedLike> Likes { get; set; }
+        //Yayınla butonu işaretli ise isActive true değilse false olacak şekilde ayarlanacak. Yayınla denilen gönderiler anasayfada yayınlancak.
     }
 }

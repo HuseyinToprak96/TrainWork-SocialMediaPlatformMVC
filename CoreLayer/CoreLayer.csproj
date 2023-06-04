@@ -48,10 +48,23 @@
     <Compile Include="Dtos\GenericDtos\NoContentDto.cs" />
     <Compile Include="Dtos\Mail\MailDto.cs" />
     <Compile Include="Dtos\Notification\NotificationDto.cs" />
+    <Compile Include="Dtos\Shared\CommentAddDto.cs" />
+    <Compile Include="Dtos\Shared\CommentAnswer.cs" />
+    <Compile Include="Dtos\Shared\CommentDeleteorUpdate.cs" />
+    <Compile Include="Dtos\Shared\CommentListDto.cs" />
+    <Compile Include="Dtos\Shared\SharedAddorUpdateDto.cs" />
+    <Compile Include="Dtos\Shared\SharedLikeDto.cs" />
     <Compile Include="Dtos\User\CreateUserDto.cs" />
+    <Compile Include="Dtos\User\FollowListDto.cs" />
     <Compile Include="Dtos\User\LoginDto.cs" />
+    <Compile Include="Dtos\User\UserBiographyUpdate.cs" />
+    <Compile Include="Dtos\User\UserFollowDto.cs" />
+    <Compile Include="Dtos\User\UserInfoUpdateDto.cs" />
     <Compile Include="Dtos\User\UserListDto.cs" />
+    <Compile Include="Dtos\User\UserAddorUpdateProfileImageDto.cs" />
+    <Compile Include="Dtos\User\UserSearchFilterDto.cs" />
     <Compile Include="Entities\User\Follow.cs" />
+    <Compile Include="Enum\EFileType.cs" />
     <Compile Include="Enum\EGender.cs" />
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\Shared\Comment.cs" />
@@ -68,9 +81,7 @@
     <Compile Include="Entities\NotificationEntity\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dtos\Shared\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
