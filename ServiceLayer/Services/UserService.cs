@@ -114,7 +114,7 @@ namespace ServiceLayer.Services
         public async Task<CustomResponseDto<bool>> UpdatePassword(string password, int userId)
         {
             byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);//;hashler
+            HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             var user=await _userRepository.GetAsync(userId);
             user.PasswordHash= passwordHash;
             user.PasswordSalt= passwordSalt;
