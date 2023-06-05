@@ -194,6 +194,8 @@
     <Content Include="Views\User\Profile.cshtml" />
     <Content Include="Views\User\GetInfo.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Auth\Forgot.cshtml" />
+    <Content Include="Views\Auth\PasswordUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -111,6 +111,17 @@ namespace ServiceLayer.Services
             return CustomResponseDto<UserListDto>.Fail(404, "User Not Found");
         }
 
+        public async Task<CustomResponseDto<bool>> UpdatePassword(string password, int userId)
+        {
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);//;hashler
+            var user=await _userRepository.GetAsync(userId);
+            user.PasswordHash= passwordHash;
+            user.PasswordSalt= passwordSalt;
+            await _userRepository.UpdateAsync(user);
+            return CustomResponseDto<bool>.Success(200, true);
+        }
+
         public Task<CustomResponseDto<bool>> UpdateProfileImage(UserAddorUpdateProfileImageDto userAddorUpdateProfileImageDto)
         {
             throw new NotImplementedException();

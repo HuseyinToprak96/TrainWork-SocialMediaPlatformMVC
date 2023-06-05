@@ -22,5 +22,6 @@ namespace CoreLayer.Interfaces.Service
         Task<CustomResponseDto<IEnumerable<UserListDto>>> GetUserList();
         Task<CustomResponseDto<IEnumerable<UserListDto>>> FilterUsers(UserSearchFilterDto userSearchFilterDto);
         Task<CustomResponseDto<IEnumerable<RecommendedPeopleDto>>> GetRecommendedPeople(int userId);
+        Task<CustomResponseDto<bool>> UpdatePassword(string password,int userId);
     }
 }

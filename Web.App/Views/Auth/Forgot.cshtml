@@ -1,0 +1,39 @@
+﻿@model string
+@{
+    ViewBag.Title = "Forgot";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    string errorMessage = ViewBag.Error;
+}
+@if (errorMessage != "")
+{
+    <script>
+        swal(@errorMessage)
+    </script>
+}
+@using (Html.BeginForm("Forgot", "Auth", FormMethod.Post))
+{
+    <div class="row" style="margin-top:150px;opacity:0.8">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark" style="color:white"><h2 style="text-align:center;">Şifremi Unuttum</h2></div>
+                <div class="card-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("E-mail")
+                            <div class="col-md-10">
+                                <input type="email" class="form-control" name="email"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Gönder" class="btn btn-dark mt-2" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
