@@ -54,25 +54,27 @@ namespace Web.App.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<ActionResult> Forgot(string email)
+        public  ActionResult Forgot(string email)
         {
-            var response = await _userService.AnyAsync(x => x.Email == email);
-            if (response.Data)
+            var response = _userService.Where(x => x.Email == email);
+            if (response.Data!=null)
             {
-            MailDto mailDto = new MailDto { Body = "Şifrenizi unuttuysanız yeni şifre oluşturmak için <a href='http://localhost:44379/Auth/PasswordUpdate'> tıklayınız.</a>", Contact=email, Subject="Şifremi Unuttum" };
+                var user = response.Data.FirstOrDefault();
+            MailDto mailDto = new MailDto { Body = $"Şifrenizi unuttuysanız yeni şifre oluşturmak için <a href='http://localhost:44379/Auth/PasswordUpdate?u={user.Id}'> tıklayınız.</a>", Contact=email, Subject="Şifremi Unuttum" };
             bool IsSend = _mailService.SendMail(mailDto);
             }
             return Redirect("/Auth/Forgot?error=1");
         }
-        public ActionResult PasswordUpdate()
+        public ActionResult PasswordUpdate(int u)
         {
+            ViewBag.Id = u;
             return View();
         }
         [HttpPost]
-        public ActionResult PasswordUpdate(string newPassword)
+        public async Task<ActionResult> PasswordUpdate(string newPassword,int userId)
         {
-
-            return View();
+            var result = await _userService.UpdatePassword(newPassword,userId);
+            return RedirectToAction("Login");
         }
         public ActionResult Logout()
         {
