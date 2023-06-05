@@ -20,6 +20,7 @@ namespace ServiceLayer.Services
         private GenericRepository<Role> _roleRepository= new GenericRepository<Role>();
         private GenericRepository<District> _districtRepository=new GenericRepository<District>();
         private GenericRepository<City> _cityRepository =new GenericRepository<City>();
+        private GenericRepository<UserProfileImages> _userProfileImageRepository=new GenericRepository<UserProfileImages>();
         public Task<CustomResponseDto<bool>> AddProfileImage(UserAddorUpdateProfileImageDto userAddorUpdateProfileImageDto)
         {
             throw new NotImplementedException();
@@ -39,6 +40,32 @@ namespace ServiceLayer.Services
             throw new NotImplementedException();
         }
 
+        public async Task<CustomResponseDto<UserInfoUpdateDto>> GetInfo(int id)
+        {
+            var data = (from u in await _userRepository.GetAllAsync()
+                        select new UserInfoUpdateDto { UserId = u.Id, DistrictId = Convert.ToInt32(u.DistrictId), Email = u.Email, Gender = u.Gender, Name = u.Name, PhoneNumber = u.PhoneNumber, Surname = u.Surname, Username = u.Username }).FirstOrDefault();
+            return CustomResponseDto<UserInfoUpdateDto>.Success(200, data);
+        }
+
+        public async Task<CustomResponseDto<IEnumerable<RecommendedPeopleDto>>> GetRecommendedPeople(int userId)
+        {
+            var images = await _userProfileImageRepository.GetAllAsync();
+            var users = await _userRepository.GetUsersNotFollow(userId);
+            var data = (from u in users
+           join img in images
+           on u.Id equals img.UserId into u_img
+           from ui in u_img.DefaultIfEmpty()
+           where u.Id!=userId
+                        select new RecommendedPeopleDto
+                        {
+                             Id=u.Id,
+                             Username=u.Username,
+                             Image=ui?.Path
+                              
+                        }).ToList();
+            return CustomResponseDto<IEnumerable<RecommendedPeopleDto>>.Success(200,data);
+        }
+
         public Task<CustomResponseDto<IEnumerable<UserListDto>>> GetUserList()
         {
             throw new NotImplementedException();
@@ -50,12 +77,6 @@ namespace ServiceLayer.Services
             if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
             {
                 var userListDto = (from u in await _userRepository.GetAllAsync()
-                                   join r in await _roleRepository.GetAllAsync()
-                                   on u.RoleId equals r.Id
-                                   join d in await _districtRepository.GetAllAsync()
-                                   on u.DistrictId equals d.Id
-                                   join c in await _cityRepository.GetAllAsync()
-                                   on d.CityId equals c.Id
                                    select new UserListDto
                                    {
                                        Id = u.Id,
@@ -64,11 +85,27 @@ namespace ServiceLayer.Services
                                        PhoneNumber = u.PhoneNumber,
                                        Gender = u.Gender,
                                        Name = u.Name,
-                                       Surname = u.Surname,
-                                       RoleName = r.Name,
-                                       DistrictName=d.Name,
-                                       CityName=c.Name,
+                                       Surname = u.Surname
                                    }).FirstOrDefault();
+                var data = (from d in await _districtRepository.GetAllAsync()
+                            join c in await _cityRepository.GetAllAsync()
+                            on d.CityId equals c.Id
+                            select new
+                            {
+                                DistrictId = d.Id,
+                                DistrictName = d.Name,
+                                CityId = c.Id,
+                                CityName = c.Name,
+                            }).FirstOrDefault();
+                if (data != null)
+                {
+                    userListDto.DistrictId = data.DistrictId;
+                    userListDto.DistrictName = data.DistrictName;
+                    userListDto.CityId = data.CityId;
+                    userListDto.CityName = data.CityName;
+                }
+                userListDto.RoleName=(from r in await _roleRepository.GetAllAsync()
+                                      where r.Id == user.RoleId select r.Name).FirstOrDefault(); 
                 return CustomResponseDto<UserListDto>.Success(200, userListDto);
             }
             return CustomResponseDto<UserListDto>.Fail(404, "User Not Found");

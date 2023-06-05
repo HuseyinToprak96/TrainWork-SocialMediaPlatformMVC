@@ -16,9 +16,11 @@ namespace CoreLayer.Interfaces.Service
         Task<CustomResponseDto<bool>> AddProfileImage(UserAddorUpdateProfileImageDto userAddorUpdateProfileImageDto);
         Task<CustomResponseDto<bool>> UpdateProfileImage(UserAddorUpdateProfileImageDto userAddorUpdateProfileImageDto);
         Task<CustomResponseDto<bool>> UserBiographyUpdate(UserBiographyUpdateDto userBiographyUpdateDto);
+        Task<CustomResponseDto<UserInfoUpdateDto>> GetInfo(int id);
         Task<CustomResponseDto<bool>> UserFollow(UserFollowDto userFollowDto);
         Task<CustomResponseDto<bool>> UserInfoUpdate(UserInfoUpdateDto userInfoUpdateDto);
         Task<CustomResponseDto<IEnumerable<UserListDto>>> GetUserList();
         Task<CustomResponseDto<IEnumerable<UserListDto>>> FilterUsers(UserSearchFilterDto userSearchFilterDto);
+        Task<CustomResponseDto<IEnumerable<RecommendedPeopleDto>>> GetRecommendedPeople(int userId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using CoreLayer.Dtos.Shared;
+﻿using CoreLayer.Dtos.GenericDtos;
+using CoreLayer.Dtos.Shared;
 using CoreLayer.Entities.Shared;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,11 @@ namespace CoreLayer.Interfaces.Service
 {
     public interface ISharedService:IService<Shared>
     {
-        CommentListDto CommentAddDto(CommentAddDto commentAddDto);
-        CommentListDto CommentAnswer(CommentAnswerDto commentAnswerDto);
-        bool CommentDeleteOrUpdate(CommentDeleteorUpdateDto commentDeleteorUpdateDto);
-        bool SharedLike(SharedLikeDto sharedLikeDto);
+        Task<CustomResponseDto<CommentListDto>> CommentAddDto(CommentAddDto commentAddDto);
+        Task<CustomResponseDto<CommentListDto>> CommentAnswer(CommentAnswerDto commentAnswerDto);
+        Task<CustomResponseDto<bool>> CommentDeleteOrUpdate(CommentDeleteorUpdateDto commentDeleteorUpdateDto);
+        Task<CustomResponseDto<bool>> SharedLike(SharedLikeDto sharedLikeDto);
+        Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList();
 
     }
 }

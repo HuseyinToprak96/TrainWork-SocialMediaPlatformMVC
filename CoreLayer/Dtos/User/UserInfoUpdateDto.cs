@@ -18,5 +18,6 @@ namespace CoreLayer.Dtos.User
         public string PhoneNumber { get; set; }
         public EGender Gender { get; set; }
         public int DistrictId { get; set; }
+        public string ImagePath { get; set; }
     }
 }

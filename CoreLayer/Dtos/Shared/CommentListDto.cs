@@ -8,8 +8,10 @@ namespace CoreLayer.Dtos.Shared
 {
     public class CommentListDto
     {
+        public int Id { get; set; }
         public string UserFullName { get; set; }
         public string Comment { get; set; }
+        public int? TopCommentId { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 }

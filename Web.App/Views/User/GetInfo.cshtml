@@ -1,0 +1,80 @@
+﻿@model CoreLayer.Dtos.User.UserInfoUpdateDto
+
+
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Kişisel Bilgiler</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td rowspan="6" style="width:300px">
+                                <img src="~/Content/images/@Model.ImagePath" width="300" height="300"/>
+                            </td>
+                            <th>
+                                Fotoğraf
+                            </th>
+                            <td>
+                                <input type="file" class="form-text" id="image" value="@Model.ImagePath" />
+                            </td>
+                            </tr>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <td>
+                                <input type="text" class="form-text" id="name" value="@Model.Name" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Surname
+                            </th>
+                            <td>
+                                <input type="text" class="form-text" id="surname" value="@Model.Surname" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Phone Number
+                            </th>
+                            <td>
+                                <input type="text" class="form-text" id="phonenumber" value="@Model.PhoneNumber" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Email
+                            </th>
+                            <td>
+                                <input type="email" class="form-text" id="email" value="@Model.Email" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Username
+                            </th>
+                            <td>
+                                <input type="text" class="form-text" id="username" value="@Model.Username" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" onclick="InfoUpdate()">
+                                    Kaydet
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
