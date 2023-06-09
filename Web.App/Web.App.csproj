@@ -468,6 +468,7 @@
     <Content Include="ckeditor\vendor\promise.js" />
     <Content Include="Content\images\6f75ce36-dbeb-4934-8496-95ffed4cec48bosch.png" />
     <Content Include="Content\images\bgImage.jpg" />
+    <Content Include="Content\videos\video.mp4" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
