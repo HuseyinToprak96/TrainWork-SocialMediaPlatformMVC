@@ -1,4 +1,5 @@
-﻿using CoreLayer.Dtos.User;
+﻿using CoreLayer.Dtos.Shared;
+using CoreLayer.Dtos.User;
 using Newtonsoft.Json;
 using ServiceLayer.Services;
 using System;
@@ -87,6 +88,14 @@ namespace Web.App.Controllers
             int userId = Convert.ToInt32(Session["UserId"]);
             var result=await _sharedService.GetUserShareds(userId);
             return PartialView(result.Data);
+        }
+
+        public async Task<ActionResult> Shared(SharedAddorUpdateDto sharedAddorUpdateDto,HttpPostedFileBase file)
+        {
+            int userId = Convert.ToInt32(Session["UserId"]);
+            CoreLayer.Entities.Shared.Shared shared = new CoreLayer.Entities.Shared.Shared() { Title=sharedAddorUpdateDto.Title, Description=sharedAddorUpdateDto.Description, UserId=userId, };
+            await _sharedService.AddAsync(shared);
+            return RedirectToAction("Profile");
         }
     }
 }
