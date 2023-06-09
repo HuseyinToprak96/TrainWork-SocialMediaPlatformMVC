@@ -74,6 +74,7 @@
     <Compile Include="Dtos\User\UserInfoUpdateDto.cs" />
     <Compile Include="Dtos\User\UserListDto.cs" />
     <Compile Include="Dtos\User\UserAddorUpdateProfileImageDto.cs" />
+    <Compile Include="Dtos\User\UserPhotoDto.cs" />
     <Compile Include="Dtos\User\UserSearchFilterDto.cs" />
     <Compile Include="Entities\User\Follow.cs" />
     <Compile Include="Enum\EFileType.cs" />

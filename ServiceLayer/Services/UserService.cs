@@ -44,6 +44,10 @@ namespace ServiceLayer.Services
         {
             var data = (from u in await _userRepository.GetAllAsync()
                         select new UserInfoUpdateDto { UserId = u.Id, DistrictId = Convert.ToInt32(u.DistrictId), Email = u.Email, Gender = u.Gender, Name = u.Name, PhoneNumber = u.PhoneNumber, Surname = u.Surname, Username = u.Username }).FirstOrDefault();
+            data.ImagePath = (from i in await _userProfileImageRepository.GetAllAsync()
+                              where i.UserId==id && i.IsMain==true
+                              select i.Path
+                           ).FirstOrDefault();
             return CustomResponseDto<UserInfoUpdateDto>.Success(200, data);
         }
 
@@ -66,9 +70,30 @@ namespace ServiceLayer.Services
             return CustomResponseDto<IEnumerable<RecommendedPeopleDto>>.Success(200,data);
         }
 
+        public async Task<CustomResponseDto<UserBiographyUpdateDto>> GetUserBiography(int userId)
+        {
+            var data = await _userRepository.GetAsync(userId);
+            return CustomResponseDto<UserBiographyUpdateDto>.Success(200,new UserBiographyUpdateDto { UserId=data.Id, Biography=data.Biography});
+        }
+
         public Task<CustomResponseDto<IEnumerable<UserListDto>>> GetUserList()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<CustomResponseDto<IEnumerable<UserPhotoDto>>> GetUserPhotos(int userId)
+        {
+            var result = (from i in await _userProfileImageRepository.GetAllAsync()
+                          where i.UserId==userId
+                          select new UserPhotoDto
+                          {
+                             Id=i.Id,
+                              CreatedDate=i.CreatedDate,
+                               Description=i.Description,
+                                IsMain=i.IsMain,
+                                 Path= i.Path
+                          });
+            return CustomResponseDto<IEnumerable<UserPhotoDto>>.Success(200, result);
         }
 
         public async Task<CustomResponseDto<UserListDto>> Login(LoginDto loginDto)
@@ -127,9 +152,26 @@ namespace ServiceLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task<CustomResponseDto<bool>> UserBiographyUpdate(UserBiographyUpdateDto userBiographyUpdateDto)
+        public async Task<CustomResponseDto<bool>> UpdateProfilePhoto(int userId, int photoId)
         {
-            throw new NotImplementedException();
+            var images = _userProfileImageRepository.Where(x => x.UserId == userId);
+            foreach (var image in images.ToList())
+            {
+                if(image.Id!=photoId)
+                image.IsMain = false;
+                else
+                    image.IsMain = true;
+                await _userProfileImageRepository.UpdateAsync(image);
+            }
+            return CustomResponseDto<bool>.Success(200, true);
+        }
+
+        public async Task<CustomResponseDto<bool>> UserBiographyUpdate(UserBiographyUpdateDto userBiographyUpdateDto)
+        {
+            var user= await _userRepository.GetAsync(userBiographyUpdateDto.UserId);
+            user.Biography=userBiographyUpdateDto.Biography;
+            await _userRepository.UpdateAsync(user);
+            return CustomResponseDto<bool>.Success(200,true);
         }
 
         public Task<CustomResponseDto<bool>> UserFollow(UserFollowDto userFollowDto)
@@ -137,9 +179,31 @@ namespace ServiceLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task<CustomResponseDto<bool>> UserInfoUpdate(UserInfoUpdateDto userInfoUpdateDto)
+        public async Task<CustomResponseDto<bool>> UserInfoUpdate(UserInfoUpdateDto userInfoUpdateDto)
         {
-            throw new NotImplementedException();
+            var user=await _userRepository.GetAsync(userInfoUpdateDto.UserId);
+            if (user != null)
+            {
+                user.Surname = userInfoUpdateDto.Surname;
+                user.Name = userInfoUpdateDto.Name;
+                user.Email = userInfoUpdateDto.Email;
+                user.Username = userInfoUpdateDto.Username;
+                user.PhoneNumber = userInfoUpdateDto.PhoneNumber;
+                await _userRepository.UpdateAsync(user);
+                if (userInfoUpdateDto.ImagePath!="")
+                {
+                   var images= _userProfileImageRepository.Where(x => x.UserId == userInfoUpdateDto.UserId);
+                    foreach (var image in images.ToList()) 
+                    {
+                        image.IsMain = false;
+                        await _userProfileImageRepository.UpdateAsync(image);
+                    }
+                    UserProfileImages userProfileImages=new UserProfileImages { IsMain=true , UserId=userInfoUpdateDto.UserId, Path=userInfoUpdateDto.ImagePath, CreatedDate=DateTime.Now};
+                    await _userProfileImageRepository.AddAsync(userProfileImages);
+                }
+                return CustomResponseDto<bool>.Success(200, true);
+            }
+            return CustomResponseDto<bool>.Fail(404,"User Not Found!");
         }
     }
     

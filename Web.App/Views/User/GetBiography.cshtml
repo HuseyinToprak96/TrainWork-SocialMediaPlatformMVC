@@ -1,0 +1,19 @@
+﻿@model CoreLayer.Dtos.User.UserBiographyUpdateDto
+
+<br />
+<h3>Biyografi</h3>
+<br /> 
+<br />
+@Html.TextAreaFor(model => model.Biography, new { @id = "editor1" })
+<div class="row mt-2">
+    <div class="col-1 offset-11"><input type="submit" onclick="BioUpdate()" class="btn btn-primary" value="Kaydet" /></div>
+    </div> 
+
+<script type="text/javascript">
+    var editor = CKEDITOR.instances['editor1'];
+    if (editor) { editor.destroy(true); }
+    CKEDITOR.replace('editor1', {
+        enterMode: CKEDITOR.ENTER_BR,
+    });
+    CKFinder.setupCKEditor(null, '@Url.Content("~/ckeditor/ckfinder/")');
+</script>

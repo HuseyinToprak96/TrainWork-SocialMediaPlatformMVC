@@ -37,6 +37,7 @@ namespace ServiceLayer.Services
 
         public async Task<CustomResponseDto<T>> GetAsync(int id)
         {
+
             return CustomResponseDto<T>.Success(200, await _genericRepository.GetAsync(id));
         }
 

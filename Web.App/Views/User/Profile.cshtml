@@ -10,7 +10,13 @@
         <a class="nav-link active" data-bs-toggle="tab" href="#home" onclick="">Kişisel Bilgiler</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#menu1" onclick="">Biyografi</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#menu1" onclick="getBiography()">Biyografi</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#photos" onclick="getPhotos()">Profil Fotoğraflarım</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#shareds" onclick="getShareds()">Paylaşımlar</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#menu2" onclick="">Takipçiler(100)</a>
@@ -18,11 +24,13 @@
 </ul>
 
 <!-- Tab panes -->
-<div class="tab-content">
+<div class="tab-content" style="height:400px;max-height:max-content">
     <div class="tab-pane container active" id="home">
 
     </div>
     <div class="tab-pane container fade" id="menu1">...</div>
+    <div class="tab-pane container fade" id="photos">...</div>
+    <div class="tab-pane container fade" id="shareds">...</div>
     <div class="tab-pane container fade" id="menu2">...</div>
 </div>
 
@@ -43,24 +51,65 @@
             email: $("#email").val(),
             phoneNumber: $("#phonenumber").val(),
         }
-
-
+        var formdata = new FormData(); //FormData object
+        var fileInput = document.getElementById('fileInput');
+        //Iterating through each files selected in fileInput
+        for (i = 0; i < fileInput.files.length; i++) {
+            //Appending each file to FormData object
+            formdata.append(fileInput.files[i].name, fileInput.files[i]);
+        }
+        
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.status == 200 && xhr.readyState == 4) {
                 var response = xhr.responseText;
+                alert(response)
                 if (response == 0) {
                     swal("Hata Var!", "Güncellenemedi!", "error");
                 }
-                else if (response == 1) {
+                else {
 
                     swal("Tamamlandı!", "İşlem Başarılı!", "success");
+                    document.getElementById("profileImage").src = "~/Content/images/" + response
             }
             }
         }
-        xhr.open("Post", "", true)
-        xhr.send();
+        xhr.open("Post", "/User/GetInfoUpdate?json=" + JSON.stringify(dto), true)
+        xhr.send(formdata);
     }
 
 
+    function getBiography() {
+        $("#menu1").load("/User/GetBiography")
+    }
+
+    function BioUpdate() {
+        var dto = {
+            biography: $("#editor1").val()
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                if (xhr.responseText == 0) {
+                    swal("Hata Var!", "Güncellenemedi!", "error");
+                }
+                else {
+                    swal("Tamamlandı!", "İşlem Başarılı!", "success");
+                }
+            }
+        }
+        xhr.open("Post", "/User/UpdateBiography?json=" + JSON.stringify(dto), true)
+        xhr.send();
+    }
+
+    function getPhotos() {
+        $("#photos").load("/User/GetProfilePhotos");
+    }
+
+
+
+    function getShareds() {
+        $("#shareds").load("/User/GetShareds");
+    }
 </script>

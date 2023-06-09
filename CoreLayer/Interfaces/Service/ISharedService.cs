@@ -16,6 +16,7 @@ namespace CoreLayer.Interfaces.Service
         Task<CustomResponseDto<bool>> CommentDeleteOrUpdate(CommentDeleteorUpdateDto commentDeleteorUpdateDto);
         Task<CustomResponseDto<bool>> SharedLike(SharedLikeDto sharedLikeDto);
         Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList();
+        Task<CustomResponseDto<IEnumerable<SharedListDto>>> GetUserShareds(int userId);
 
     }
 }

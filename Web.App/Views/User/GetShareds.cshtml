@@ -1,0 +1,57 @@
+﻿@model IEnumerable<CoreLayer.Dtos.Shared.SharedListDto>
+
+<div class="row">
+    <fieldset style="border:1px solid black;border-radius:10px; margin-top:30px">
+        <legend style="border:1px solid black; margin-top:20px;text-align:center;padding:20px;background-color:cornflowerblue;border-radius:10px">Yeni Paylaşım Oluştur</legend>
+
+        <form>
+            <label for="title">Başlık</label>
+            <input type="text" class="form-control" id="title" name="Title" />
+            <br />
+            <label for="description">Açıklama</label>
+            <textarea class="form-control" name="Description" id="description">
+</textarea>
+            <br />
+            <input type="submit" class="btn btn-primary mb-3" value="Paylaş" />
+        </form>
+    </fieldset>
+</div>
+<h4>Önceki Gönderiler</h4>
+<div class="row mt-4">
+    @foreach (var item in Model)
+    {
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    @item.Title
+                </div>
+                <div class="card-body">
+                    @if (item.Type == CoreLayer.Enum.EFileType.Text)
+                    {
+                    <p>
+                         @item.Description
+                    </p>
+                    }
+                    else if (item.Type == CoreLayer.Enum.EFileType.Image)
+                {
+                        <img src="~/Content/images/@item.Path"/>
+                }
+                    else if (item.Type == CoreLayer.Enum.EFileType.Video)
+                {
+                <video width="360" height="320" controls="controls">
+                    <source src="~/Content/videos/@item.Path" type="video/mp4" />
+                </video>
+                    }
+</div>
+                <div class="card-footer">
+                    <ul>
+                        @foreach (var comment in item.CommentList)
+                        {
+<li>@comment.UserFullName | @comment.Comment | @comment.CreatedDate</li>
+                        }
+                    </ul>
+</div>
+            </div>
+        </div>
+    }
+</div>

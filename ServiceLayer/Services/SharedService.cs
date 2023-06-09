@@ -32,6 +32,43 @@ namespace ServiceLayer.Services
             throw new NotImplementedException();
         }
 
+        public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> GetUserShareds(int userId)
+        {
+            var sharedLikeList = await _sharedLikeRepository.GetAllAsync();
+            var commentList = await _commentRepository.GetAllAsync();
+            var userList= await _userRepository.GetAllAsync();
+            var result = (from s in await _sharedRepository.GetAllAsync()
+                          join u in await _userRepository.GetAllAsync()
+                          on s.UserId equals u.Id
+                          select new SharedListDto
+                          {
+                               Description = s.Description,
+                                Id = s.Id,
+                                 Path = s.Path,
+                                  Title= s.Title,
+                                  Type = s.Type,
+                                   Username=u.Username,
+                                    LikeCount=(from l in sharedLikeList
+                                               where l.SharedId == s.Id
+                                               select l).Count(),
+                                     CommentList=(from cl in commentList
+                                                  where cl.SharedId == s.Id
+                                                  select new CommentListDto
+                                                  {
+                                                       Comment=cl.Content,
+                                                        CreatedDate=cl.CreatedDate,
+                                                         Id=cl.Id,
+                                                          TopCommentId=cl.TopCommentId,
+                                                           UserFullName= (from cu in userList
+                                                                          where cu.Id==cl.UserId
+                                                                          select cu.Username).FirstOrDefault(),
+                                                  }).ToList()
+                          });
+
+
+            return CustomResponseDto<IEnumerable<SharedListDto>>.Success(200, result);
+        }
+
         public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList()
         {
             var data = (from s in await _sharedRepository.GetAllAsync()

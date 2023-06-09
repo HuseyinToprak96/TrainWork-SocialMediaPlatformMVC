@@ -27,7 +27,7 @@ namespace Web.App.Controllers
         public async Task<ActionResult> Login(LoginDto loginDto,string returnUrl) 
         {
             var user=await _userService.Login(loginDto);
-            if (user!=null)
+            if (user.Data!=null)
             {
                 FormsAuthentication.SetAuthCookie(user.Data.Id.ToString(),false);
                 Session["UserId"]=user.Data.Id;
@@ -57,7 +57,7 @@ namespace Web.App.Controllers
         public  ActionResult Forgot(string email)
         {
             var response = _userService.Where(x => x.Email == email);
-            if (response.Data!=null)
+            if (response.Data.Count()>0)
             {
                 var user = response.Data.FirstOrDefault();
             MailDto mailDto = new MailDto { Body = $"Şifrenizi unuttuysanız yeni şifre oluşturmak için <a href='http://localhost:44379/Auth/PasswordUpdate?u={user.Id}'> tıklayınız.</a>", Contact=email, Subject="Şifremi Unuttum" };
