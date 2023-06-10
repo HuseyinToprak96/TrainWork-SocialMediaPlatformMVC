@@ -4,16 +4,17 @@
     <fieldset style="border:1px solid black;border-radius:10px; margin-top:30px">
         <legend style="border:1px solid black; margin-top:20px;text-align:center;padding:20px;background-color:cornflowerblue;border-radius:10px">Yeni Paylaşım Oluştur</legend>
 
-        <form>
             <label for="title">Başlık</label>
             <input type="text" class="form-control" id="title" name="Title" />
             <br />
+            <label for="file">Dosya Seç</label>
+            <input type="file" id="file" class="form-control" name="File"/>
             <label for="description">Açıklama</label>
             <textarea class="form-control" rows="6" name="Description" id="description">
 </textarea>
             <br />
             <input type="submit" class="btn btn-primary mb-3" value="Paylaş" />
-        </form>
+
     </fieldset>
 </div>
 <h4>Önceki Gönderiler</h4>

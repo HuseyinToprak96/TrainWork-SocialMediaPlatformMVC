@@ -112,4 +112,24 @@
     function getShareds() {
         $("#shareds").load("/User/GetShareds");
     }
+
+    function AddNewShared() {
+        var dto = {
+            biography: $("#editor1").val()
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                if (xhr.responseText == 0) {
+                    swal("Hata Var!", "Güncellenemedi!", "error");
+                }
+                else {
+                    swal("Tamamlandı!", "İşlem Başarılı!", "success");
+                }
+            }
+        }
+        xhr.open("Post", "/User/AddNewShared?json=" + JSON.stringify(dto), true)
+        xhr.send();
+    }
 </script>

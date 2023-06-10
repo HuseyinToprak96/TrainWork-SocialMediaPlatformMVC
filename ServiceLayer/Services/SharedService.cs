@@ -71,32 +71,23 @@ namespace ServiceLayer.Services
 
         public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList()
         {
-            var data = (from s in await _sharedRepository.GetAllAsync()
-                        where s.IsDeleted == false && s.IsActive == true
-                        select new SharedListDto
-                        {
-                            Id = s.Id,
-                            Description = s.Description,
-                            Path = s.Path,
-                            Title = s.Title,
-                             LikeCount=(from sl in _sharedLikeRepository.GetAllAsync().Result
-                                        where sl.SharedId==s.Id
-                                        select sl.Id).Count(),
-                              Username=_userRepository.GetAsync(Convert.ToInt32(s.UserId)).Result.Username,
-                               CommentList=(from c in  _commentRepository.GetAllAsync().Result
-                                            where c.SharedId==s.Id
-                                            select new CommentListDto
-                                            {
-                                                 Id=c.Id,
-                                                  Comment=c.Content,
-                                                   CreatedDate=c.CreatedDate,
-                                                    TopCommentId=c.TopCommentId,
-                                                     UserFullName= _userRepository.GetAsync(Convert.ToInt32(c.UserId)).Result.Username,
-                                            }).ToList()
-                             
-                        }).ToList();
+            var users=await _userRepository.GetAllAsync();
+            var datas = (from s in await _sharedRepository.GetAllAsync()
+                         where s.IsDeleted == false && s.IsActive == true
+                         select new SharedListDto
+                         {
+                             Id = s.Id,
+                             Description = s.Description,
+                             Path = s.Path,
+                             Title = s.Title,
+                             LikeCount = _sharedLikeRepository.Where(x=>x.SharedId==s.Id).Count(),
+                             Type = s.Type,
+                             Username =users.FirstOrDefault(x=>x.Id==s.UserId).Username,
+                         }).ToList();
+           
+
             
-            return CustomResponseDto<IEnumerable<SharedListDto>>.Success(200,data);
+            return CustomResponseDto<IEnumerable<SharedListDto>>.Success(200,datas);
         }
 
         public Task<CustomResponseDto<bool>> SharedLike(SharedLikeDto sharedLikeDto)
