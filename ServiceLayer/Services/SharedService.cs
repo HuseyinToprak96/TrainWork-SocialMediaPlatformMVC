@@ -17,9 +17,37 @@ namespace ServiceLayer.Services
         private GenericRepository<SharedLike> _sharedLikeRepository=new GenericRepository<SharedLike>();
         private UserRepository _userRepository = new UserRepository();
         private GenericRepository<Comment> _commentRepository=new GenericRepository<Comment>();
-        public Task<CustomResponseDto<CommentListDto>> CommentAddDto(CommentAddDto commentAddDto)
+
+        public async Task<CustomResponseDto<bool>> AddLike(SharedLikeDto sharedLikeDto)
         {
-            throw new NotImplementedException();
+            var like = _sharedLikeRepository.Where(x => x.SharedId == sharedLikeDto.SharedId && x.UserId == sharedLikeDto.UserId).FirstOrDefault();
+            if (like == null)
+            {
+                if (await _sharedRepository.AnyAsync(x => x.Id == sharedLikeDto.SharedId && x.IsDeleted == false && x.IsActive == true) && await _userRepository.AnyAsync(x => x.Id == sharedLikeDto.UserId && x.IsDeleted == false && x.IsActive == true))
+                {
+                    await _sharedLikeRepository.AddAsync(new CoreLayer.Entities.Shared.SharedLike { SharedId = sharedLikeDto.SharedId, UserId = sharedLikeDto.UserId });
+                    return CustomResponseDto<bool>.Success(200, true);
+                }
+                return CustomResponseDto<bool>.Fail(200, "Gönderi Bulunamadı!");
+            }
+            else
+            {
+                await _sharedLikeRepository.DeleteAsync(like.Id);
+                return CustomResponseDto<bool>.Success(201, true);
+            }
+        }
+
+        public async Task<CustomResponseDto<CommentListDto>> CommentAddDto(CommentAddDto commentAddDto)
+        {
+            if (await _sharedRepository.AnyAsync(x=>x.Id==commentAddDto.SharedId) && await _userRepository.AnyAsync(x=>x.Id==commentAddDto.UserId))
+            {
+                Comment comment = new Comment() { UserId = commentAddDto.UserId, Content = commentAddDto.Comment, SharedId = commentAddDto.SharedId , TopCommentId=commentAddDto.TopCommentId};
+                await _commentRepository.AddAsync(comment);
+                var user = await _userRepository.GetAsync(commentAddDto.UserId);
+                CommentListDto commentListDto = new CommentListDto() { Comment = commentAddDto.Comment, CreatedDate = DateTime.Now, TopCommentId = commentAddDto.TopCommentId, UserFullName = user.Name + " " + user.Surname };
+                return CustomResponseDto<CommentListDto>.Success(200, commentListDto);
+            }
+            return CustomResponseDto<CommentListDto>.Fail(404,"Kullanıcı Veya Paylaşım Bulunamadı!");
         }
 
         public Task<CustomResponseDto<CommentListDto>> CommentAnswer(CommentAnswerDto commentAnswerDto)
@@ -30,6 +58,23 @@ namespace ServiceLayer.Services
         public Task<CustomResponseDto<bool>> CommentDeleteOrUpdate(CommentDeleteorUpdateDto commentDeleteorUpdateDto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<CustomResponseDto<IEnumerable<CommentListDto>>> GetSharedCommentList(int sharedId)
+        {
+            var users = await _userRepository.GetAllAsync();
+            var comments = await _commentRepository.GetAllAsync();
+            var result = (from c in comments
+                          where c.SharedId == sharedId && c.IsDeleted== false
+                          select new CommentListDto
+                          {
+                              Comment = c.Content,
+                              CreatedDate = c.CreatedDate,
+                              Id = c.Id,
+                              TopCommentId = c.TopCommentId,
+                              SharedId = Convert.ToInt32(c.SharedId)
+                          });
+            return CustomResponseDto<IEnumerable<CommentListDto>>.Success(200, result);
         }
 
         public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> GetUserShareds(int userId)
@@ -69,7 +114,7 @@ namespace ServiceLayer.Services
             return CustomResponseDto<IEnumerable<SharedListDto>>.Success(200, result);
         }
 
-        public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList()
+        public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList(int userId)
         {
             var users=await _userRepository.GetAllAsync();
             var datas = (from s in await _sharedRepository.GetAllAsync()
@@ -84,15 +129,32 @@ namespace ServiceLayer.Services
                              Type = s.Type,
                              Username =users.FirstOrDefault(x=>x.Id==s.UserId).Username,
                          }).ToList();
-           
-
-            
+            foreach (var item in datas)
+            {
+                if (await _sharedLikeRepository.AnyAsync(x=>x.UserId==userId && x.SharedId==item.Id))
+                    item.isLike = true;
+            }
             return CustomResponseDto<IEnumerable<SharedListDto>>.Success(200,datas);
         }
 
         public Task<CustomResponseDto<bool>> SharedLike(SharedLikeDto sharedLikeDto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<CustomResponseDto<bool>> SharedRepeat(int sharedId, int userId)
+        {
+            if (await _sharedRepository.AnyAsync(x => x.Id == sharedId && x.IsDeleted==false && x.IsActive==true) && await _userRepository.AnyAsync(x => x.Id == userId && x.IsDeleted == false && x.IsActive == true))
+            {
+                var shared = await _sharedRepository.GetAsync(sharedId);
+                Shared newShared = new Shared { Description = shared.Description, Path = shared.Path, Title = shared.Title, Type = shared.Type, UserId = userId };
+                await _sharedRepository.AddAsync(shared);
+                return CustomResponseDto<bool>.Success(200, true);
+            }
+            else
+            {
+                return CustomResponseDto<bool>.Fail(200, "Bulunamadı!");
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ namespace CoreLayer.Dtos.Shared
     {
         public int UserId { get; set; }
         public int SharedId { get; set; }
+        public int TopCommentId { get; set; }
         public string Comment { get; set; }
 
     }

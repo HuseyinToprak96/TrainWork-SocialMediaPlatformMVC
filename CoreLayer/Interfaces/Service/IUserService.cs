@@ -26,5 +26,10 @@ namespace CoreLayer.Interfaces.Service
         Task<CustomResponseDto<bool>> UpdatePassword(string password,int userId);
         Task<CustomResponseDto<IEnumerable<UserPhotoDto>>> GetUserPhotos(int userId);
         Task<CustomResponseDto<bool>> UpdateProfilePhoto(int userId, int photoId);
+        Task<CustomResponseDto<IEnumerable<UserListDto>>> GetFollowers(int userId);
+        Task<CustomResponseDto<IEnumerable<UserListDto>>> GetFollowings(int userId);
+        CustomResponseDto<int> GetFollowersCount(int userId);
+        CustomResponseDto<int> GetFollowingsCount(int userId);
+        Task<CustomResponseDto<bool>> RemoveFollowerOrFollowingRemove(int followerId, int followingId);
     }
 }

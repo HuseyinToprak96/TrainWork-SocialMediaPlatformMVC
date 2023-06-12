@@ -13,13 +13,18 @@ namespace RepositoryLayer.Repositories
     {
         public async Task<IEnumerable<User>> GetUsersNotFollow(int id)
         {
+            var followingIds = _db.Follows.Where(x => x.FollowerId == id).Select(x => x.FollowingId);
+            List<int> ids = new List<int>();
+            foreach (var item in followingIds)
+            {
+                int i = Convert.ToInt32(item);
+
+                ids.Add(i);
+            }
             var users=(from u in await _db.Users.ToListAsync()
-                       join f in await _db.Follows.ToListAsync()
-                       on u.Id equals f.FollowerId
-                       into uf
-                       from u_f in uf.DefaultIfEmpty()
-                       where u_f==null && u.Id!= id
+                       where !ids.Contains(u.Id) && u.Id!=id
                        select u).ToList();
+            
             return users;
         }
 

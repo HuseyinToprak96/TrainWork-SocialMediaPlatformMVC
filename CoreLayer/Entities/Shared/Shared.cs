@@ -13,6 +13,7 @@ namespace CoreLayer.Entities.Shared
         public string Title { get; set; } 
         public string Description { get; set; }
         public string Path { get; set; }
+        public int? CreatedUserId { get; set; }//Bunu koyma sebebimiz başka kullanıcıların gönderisini paylaşabiliyoruz. Bu gönderinin asıl sahibi kim?
         public int? UserId { get; set; }
         public User.User User { get; set; }
         public EFileType Type { get; set; }

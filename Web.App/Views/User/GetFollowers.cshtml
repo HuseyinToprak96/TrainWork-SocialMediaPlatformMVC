@@ -1,0 +1,49 @@
+﻿@model Tuple<IEnumerable<CoreLayer.Dtos.User.UserListDto>,IEnumerable<CoreLayer.Dtos.User.UserListDto>>
+
+<div class="row mt-4">
+    <div class="col-6">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="2">
+                        Takipçi Listesi
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Item1)
+                {
+                    <tr id="followerRow_@item.Id">
+                        <td>@item.Name @item.Surname (@item.Username)</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="removeFollower(@item.Id)">Sil</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-6">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="2">
+                        Takip Edilen Listesi
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Item2)
+                {
+                    <tr id="followingRow_@item.Id">
+                        <td>@item.Name @item.Surname (@item.Username)</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="removeFollowing(@item.Id)">Sil</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

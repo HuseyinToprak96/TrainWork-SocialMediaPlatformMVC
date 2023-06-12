@@ -132,7 +132,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Filters\AdminFilter.cs" />
     <Compile Include="Filters\LoginFilter.cs" />
+    <Compile Include="Filters\LogoutFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -530,6 +532,7 @@
     <Content Include="Views\User\GetBiography.cshtml" />
     <Content Include="Views\User\GetProfilePhotos.cshtml" />
     <Content Include="Views\User\GetShareds.cshtml" />
+    <Content Include="Views\User\GetFollowers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -15,8 +15,10 @@ namespace CoreLayer.Interfaces.Service
         Task<CustomResponseDto<CommentListDto>> CommentAnswer(CommentAnswerDto commentAnswerDto);
         Task<CustomResponseDto<bool>> CommentDeleteOrUpdate(CommentDeleteorUpdateDto commentDeleteorUpdateDto);
         Task<CustomResponseDto<bool>> SharedLike(SharedLikeDto sharedLikeDto);
-        Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList();
+        Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList(int userId);
         Task<CustomResponseDto<IEnumerable<SharedListDto>>> GetUserShareds(int userId);
-
+        Task<CustomResponseDto<IEnumerable<CommentListDto>>> GetSharedCommentList(int sharedId);
+        Task<CustomResponseDto<bool>> SharedRepeat(int sharedId,int userId);
+        Task<CustomResponseDto<bool>> AddLike(SharedLikeDto sharedLikeDto);
     }
 }

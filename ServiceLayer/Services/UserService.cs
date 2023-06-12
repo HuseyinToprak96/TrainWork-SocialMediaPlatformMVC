@@ -21,6 +21,7 @@ namespace ServiceLayer.Services
         private GenericRepository<District> _districtRepository=new GenericRepository<District>();
         private GenericRepository<City> _cityRepository =new GenericRepository<City>();
         private GenericRepository<UserProfileImages> _userProfileImageRepository=new GenericRepository<UserProfileImages>();
+        private GenericRepository<Follow> _followRepository=new GenericRepository<Follow>();
         public Task<CustomResponseDto<bool>> AddProfileImage(UserAddorUpdateProfileImageDto userAddorUpdateProfileImageDto)
         {
             throw new NotImplementedException();
@@ -40,9 +41,52 @@ namespace ServiceLayer.Services
             throw new NotImplementedException();
         }
 
+        public async Task<CustomResponseDto<IEnumerable<UserListDto>>> GetFollowers(int userId)
+        {
+            var followers= _followRepository.Where(x => x.FollowingId == userId).AsEnumerable();
+            var data = (from f in followers
+                        join u in await _userRepository.GetAllAsync()
+                        on f.FollowerId equals u.Id
+                      select new UserListDto
+                      {
+                           Id = u.Id,
+                            Name= u.Name,
+                             Surname= u.Surname,
+                              Username= u.Username
+                      }).ToList();
+            return CustomResponseDto<IEnumerable<UserListDto>>.Success(200, data);
+        }
+
+        public CustomResponseDto<int> GetFollowersCount(int userId)
+        {
+            var followersCount = _followRepository.Where(x => x.FollowingId == userId).Count();
+            return CustomResponseDto<int>.Success(200,followersCount);
+        }
+        public CustomResponseDto<int> GetFollowingsCount(int userId)
+        {
+            var followersCount = _followRepository.Where(x => x.FollowerId == userId).Count();
+            return CustomResponseDto<int>.Success(200, followersCount);
+        }
+        public async Task<CustomResponseDto<IEnumerable<UserListDto>>> GetFollowings(int userId)//Takip edilenler
+        {
+            var followers = _followRepository.Where(x => x.FollowerId == userId).ToList();
+            var data = (from f in followers
+                        join u in await _userRepository.GetAllAsync()
+                        on f.FollowingId equals u.Id
+                        select new UserListDto
+                        {
+                            Id = u.Id,
+                            Name = u.Name,
+                            Surname = u.Surname,
+                            Username = u.Username
+                        });
+            return CustomResponseDto<IEnumerable<UserListDto>>.Success(200, data);
+        }
+
         public async Task<CustomResponseDto<UserInfoUpdateDto>> GetInfo(int id)
         {
             var data = (from u in await _userRepository.GetAllAsync()
+                        where u.Id == id
                         select new UserInfoUpdateDto { UserId = u.Id, DistrictId = Convert.ToInt32(u.DistrictId), Email = u.Email, Gender = u.Gender, Name = u.Name, PhoneNumber = u.PhoneNumber, Surname = u.Surname, Username = u.Username }).FirstOrDefault();
             data.ImagePath = (from i in await _userProfileImageRepository.GetAllAsync()
                               where i.UserId==id && i.IsMain==true
@@ -53,21 +97,15 @@ namespace ServiceLayer.Services
 
         public async Task<CustomResponseDto<IEnumerable<RecommendedPeopleDto>>> GetRecommendedPeople(int userId)
         {
-            var images = await _userProfileImageRepository.GetAllAsync();
             var users = await _userRepository.GetUsersNotFollow(userId);
-            var data = (from u in users
-           join img in images
-           on u.Id equals img.UserId into u_img
-           from ui in u_img.DefaultIfEmpty()
-           where u.Id!=userId
-                        select new RecommendedPeopleDto
-                        {
-                             Id=u.Id,
-                             Username=u.Username,
-                             Image=ui?.Path
-                              
-                        }).ToList();
-            return CustomResponseDto<IEnumerable<RecommendedPeopleDto>>.Success(200,data);
+
+            List<RecommendedPeopleDto> list=new List<RecommendedPeopleDto>();
+            foreach (var item in users)
+            {
+                RecommendedPeopleDto recommendedPeopleDto=new RecommendedPeopleDto { Id=item.Id, Username=item.Username, Image=_userProfileImageRepository.Where(x=>x.UserId==item.Id && x.IsMain==true).FirstOrDefault()?.Path };
+                list.Add(recommendedPeopleDto);
+            }
+            return CustomResponseDto<IEnumerable<RecommendedPeopleDto>>.Success(200,list);
         }
 
         public async Task<CustomResponseDto<UserBiographyUpdateDto>> GetUserBiography(int userId)
@@ -102,6 +140,7 @@ namespace ServiceLayer.Services
             if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
             {
                 var userListDto = (from u in await _userRepository.GetAllAsync()
+                                   where u.Id==user.Id
                                    select new UserListDto
                                    {
                                        Id = u.Id,
@@ -110,7 +149,8 @@ namespace ServiceLayer.Services
                                        PhoneNumber = u.PhoneNumber,
                                        Gender = u.Gender,
                                        Name = u.Name,
-                                       Surname = u.Surname
+                                       Surname = u.Surname,
+                                       RoleId=Convert.ToInt32(u.RoleId)
                                    }).FirstOrDefault();
                 var data = (from d in await _districtRepository.GetAllAsync()
                             join c in await _cityRepository.GetAllAsync()
@@ -136,6 +176,18 @@ namespace ServiceLayer.Services
             return CustomResponseDto<UserListDto>.Fail(404, "User Not Found");
         }
 
+        public async Task<CustomResponseDto<bool>> RemoveFollowerOrFollowingRemove(int followerId, int followingId)
+        {
+            var data=_followRepository.Where(x=>x.FollowerId==followerId && x.FollowingId==followingId).FirstOrDefault();
+            if (data != null)
+            {
+                await _followRepository.DeleteAsync(data.Id);
+                return CustomResponseDto<bool>.Success(200, true);
+            }
+            return CustomResponseDto<bool>.Fail(404, "Bulunamadı!");
+           
+        }
+
         public async Task<CustomResponseDto<bool>> UpdatePassword(string password, int userId)
         {
             byte[] passwordHash, passwordSalt;
@@ -154,16 +206,23 @@ namespace ServiceLayer.Services
 
         public async Task<CustomResponseDto<bool>> UpdateProfilePhoto(int userId, int photoId)
         {
-            var images = _userProfileImageRepository.Where(x => x.UserId == userId);
-            foreach (var image in images.ToList())
+            if (await _userProfileImageRepository.AnyAsync(x => x.Id == photoId) && await _userRepository.AnyAsync(x => x.Id == userId))
             {
-                if(image.Id!=photoId)
-                image.IsMain = false;
-                else
-                    image.IsMain = true;
-                await _userProfileImageRepository.UpdateAsync(image);
+                var images = _userProfileImageRepository.Where(x => x.UserId == userId);
+                foreach (var image in images.ToList())
+                {
+                    if (image.Id != photoId)
+                        image.IsMain = false;
+                    else
+                        image.IsMain = true;
+                    await _userProfileImageRepository.UpdateAsync(image);
+                }
+                return CustomResponseDto<bool>.Success(200, true);
             }
-            return CustomResponseDto<bool>.Success(200, true);
+            else
+            {
+                return CustomResponseDto<bool>.Fail(404, "Bulunamadı!");
+            }
         }
 
         public async Task<CustomResponseDto<bool>> UserBiographyUpdate(UserBiographyUpdateDto userBiographyUpdateDto)
@@ -174,9 +233,15 @@ namespace ServiceLayer.Services
             return CustomResponseDto<bool>.Success(200,true);
         }
 
-        public Task<CustomResponseDto<bool>> UserFollow(UserFollowDto userFollowDto)
+        public async Task<CustomResponseDto<bool>> UserFollow(UserFollowDto userFollowDto)
         {
-            throw new NotImplementedException();
+            if (await _userRepository.AnyAsync(x=>x.Id==userFollowDto.FollowerId && x.IsDeleted==false && x.IsActive==true) && await _userRepository.AnyAsync(x=>x.Id==userFollowDto.FollowingId && x.IsDeleted == false && x.IsActive == true))
+            {
+                Follow follow = new Follow { FollowerId = userFollowDto.FollowerId, FollowingId = userFollowDto.FollowingId };
+                await _followRepository.AddAsync(follow);
+                return CustomResponseDto<bool>.Success(200, true);
+            }
+            return CustomResponseDto<bool>.Fail(404, "Kullanıcı bulunamadı!");
         }
 
         public async Task<CustomResponseDto<bool>> UserInfoUpdate(UserInfoUpdateDto userInfoUpdateDto)
@@ -190,16 +255,19 @@ namespace ServiceLayer.Services
                 user.Username = userInfoUpdateDto.Username;
                 user.PhoneNumber = userInfoUpdateDto.PhoneNumber;
                 await _userRepository.UpdateAsync(user);
-                if (userInfoUpdateDto.ImagePath!="")
+                if (!String.IsNullOrWhiteSpace(userInfoUpdateDto.ImagePath))
                 {
-                   var images= _userProfileImageRepository.Where(x => x.UserId == userInfoUpdateDto.UserId);
-                    foreach (var image in images.ToList()) 
+                    var images = _userProfileImageRepository.Where(x => x.UserId == userInfoUpdateDto.UserId);
+                    foreach (var image in images.ToList())
                     {
                         image.IsMain = false;
                         await _userProfileImageRepository.UpdateAsync(image);
                     }
-                    UserProfileImages userProfileImages=new UserProfileImages { IsMain=true , UserId=userInfoUpdateDto.UserId, Path=userInfoUpdateDto.ImagePath, CreatedDate=DateTime.Now};
-                    await _userProfileImageRepository.AddAsync(userProfileImages);
+                    if (userInfoUpdateDto.ImagePath != "")
+                    {
+                        UserProfileImages userProfileImages = new UserProfileImages { IsMain = true, UserId = userInfoUpdateDto.UserId, Path = userInfoUpdateDto.ImagePath, CreatedDate = DateTime.Now };
+                        await _userProfileImageRepository.AddAsync(userProfileImages);
+                    }
                 }
                 return CustomResponseDto<bool>.Success(200, true);
             }

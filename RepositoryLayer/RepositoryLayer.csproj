@@ -66,6 +66,10 @@
     <Compile Include="Migrations\202306041214358_initDb_.designer.cs">
       <DependentUpon>202306041214358_initDb_.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306111446433_createdSharedCol.cs" />
+    <Compile Include="Migrations\202306111446433_createdSharedCol.designer.cs">
+      <DependentUpon>202306111446433_createdSharedCol.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
@@ -85,6 +89,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202306041214358_initDb_.resx">
       <DependentUpon>202306041214358_initDb_.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306111446433_createdSharedCol.resx">
+      <DependentUpon>202306111446433_createdSharedCol.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

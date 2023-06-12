@@ -8,15 +8,15 @@ using System.Web.Security;
 
 namespace Web.App.Filters
 {
-    public class LoginFilter : ActionFilterAttribute
+    public class AdminFilter:ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
 
-            var data = FormsAuthentication.GetAuthCookie("RoleId", false);
-            data.Value = data.Value.Trim();
+
             //int id = Convert.ToInt32(Session["Id"]);
-            if (!FormsAuthentication.IsEnabled)
+            var data = FormsAuthentication.GetAuthCookie("RoleId", false);
+            if (true)
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary{
                     {"action","Login" },

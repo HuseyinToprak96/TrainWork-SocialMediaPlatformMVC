@@ -13,5 +13,6 @@ namespace CoreLayer.Dtos.Shared
         public string Comment { get; set; }
         public int? TopCommentId { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int SharedId { get; set; }
     }
 }

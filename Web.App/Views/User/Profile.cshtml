@@ -19,7 +19,7 @@
         <a class="nav-link" data-bs-toggle="tab" href="#shareds" onclick="getShareds()">Paylaşımlar</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#menu2" onclick="">Takipçiler(100)</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#followComponent" onclick="getFollowers()">Takipçi/Takip(@ViewBag.FollowerCount/@ViewBag.FollowingCount)</a>
     </li>
 </ul>
 
@@ -31,7 +31,7 @@
     <div class="tab-pane container fade" id="menu1">...</div>
     <div class="tab-pane container fade" id="photos">...</div>
     <div class="tab-pane container fade" id="shareds">...</div>
-    <div class="tab-pane container fade" id="menu2">...</div>
+    <div class="tab-pane container fade" id="followComponent">...</div>
 </div>
 
 <script>
@@ -63,7 +63,6 @@
         xhr.onreadystatechange = function () {
             if (xhr.status == 200 && xhr.readyState == 4) {
                 var response = xhr.responseText;
-                alert(response)
                 if (response == 0) {
                     swal("Hata Var!", "Güncellenemedi!", "error");
                 }
@@ -107,17 +106,27 @@
         $("#photos").load("/User/GetProfilePhotos");
     }
 
-
-
     function getShareds() {
         $("#shareds").load("/User/GetShareds");
     }
 
+    function getFollowers() {
+        $("#followComponent").load("/User/GetFollowers")
+    }
+
     function AddNewShared() {
         var dto = {
-            biography: $("#editor1").val()
+            title: $("#title").val(),
+            description: $("#description").val(),
+            isActive: document.getElementById("isActive").checked
         }
-
+        var formdata = new FormData(); //FormData object
+        var fileInput = document.getElementById('file');
+        //Iterating through each files selected in fileInput
+        for (i = 0; i < fileInput.files.length; i++) {
+            //Appending each file to FormData object
+            formdata.append(fileInput.files[i].name, fileInput.files[i]);
+        }
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.status == 200 && xhr.readyState == 4) {
@@ -129,7 +138,70 @@
                 }
             }
         }
-        xhr.open("Post", "/User/AddNewShared?json=" + JSON.stringify(dto), true)
+        xhr.open("Post", "/User/AddShared?json=" + JSON.stringify(dto), true)
+        xhr.send(formdata);
+    }
+
+
+    function mainProfileImage(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.responseText == 1) {
+                    var buttons = document.getElementsByClassName("btnPhoto")
+                    for (var i = 0; i < buttons.length; i++) {
+                        if (buttons[i].id == "btnPhoto_" + id) {
+                            buttons[i].innerText = "Aktif"
+                            buttons[i].className = "btn btn-success btnPhoto"
+                        }
+                        else {
+                            buttons[i].innerText = "Pasif"
+                            if (buttons[i].className == "btn btn-success btnPhoto") {
+                                buttons[i].className="btn btn-light btnPhoto"
+                            }
+                        }
+                    }
+                    swal("Profil Güncellendi!", "İşlem Tamamlandı!", "success");
+                }
+                else {
+                    swal("Hata Var!", "Güncellenemedi!", "error");
+                }
+            }
+        }
+        xhr.open("post", "/User/UpdateImage?imageId="+id, true);
         xhr.send();
     }
+
+    function removeFollower(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.responseText == 1) {
+                document.getElementById("followerRow_" + id).remove()
+                swal("Takipçi Kaldırıldı!", "Silindi!", "success");
+
+            }
+            else {
+                swal("Hata Var!", "Silinemedi!", "error");
+            }
+        }
+        xhr.open("post", "/User/RemoveFollower?followerId="+id, true)
+        xhr.send()
+    }
+
+    function removeFollowing(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.responseText == 1) {
+                document.getElementById("followingRow_" + id).remove()
+                swal("Takipten Çıkıldı!", "Silindi!", "success");
+
+            }
+            else {
+                swal("Hata Var!", "Silinemedi!", "error");
+            }
+        }
+        xhr.open("post", "/User/RemoveFollowing?followingId=" + id, true)
+        xhr.send()
+    }
+
 </script>

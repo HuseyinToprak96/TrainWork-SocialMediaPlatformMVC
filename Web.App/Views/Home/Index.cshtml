@@ -16,32 +16,93 @@
         {
             <div class="card mt-4 w-75 m-auto">
                 <div class="card-header">
-                  <a href="">@item.Username</a>  | <h4>@item.Title</h4>
+                    <a href="">@item.Username</a>  | <h4>@item.Title</h4>
                 </div>
-                <div class="card-body">
-                    <img src="@item.Path" width="90%" height="200"/>
+                <div class="card-body m-auto">
+                    @if (item.Type == CoreLayer.Enum.EFileType.Text)
+                    {
+                        <p>
+                            @item.Description
+                        </p>
+                    }
+                    else if (item.Type == CoreLayer.Enum.EFileType.Image)
+                    {
+                        <img src="~/Content/images/@item.Path" width="100%" height="200" />
+                    }
+                    else if (item.Type == CoreLayer.Enum.EFileType.Video)
+                    {
+                        <video width="360" height="320" controls="controls">
+                            <source src="~/Content/videos/@item.Path" type="video/mp4" />
+                        </video>
+                    }
                 </div>
                 <div class="card-footer">
-                    <button type="button" class="btn btn-success">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path>
-                        </svg>
-                        Beğen @item.LikeCount
-                    </button>
-                    <button type="button" class="btn btn-outline-danger">
+                    @if (!item.isLike)
+                    {
+                        <button type="button" class="btn btn-success" onclick="likeShared(@item.Id)" id="likeBtn_@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path>
+                            </svg>
+                            Beğen @item.LikeCount
+                        </button>}
+                    else
+                    {
+                        <button type="button" class="btn btn-warning" onclick="likeShared(@item.Id)" id="likeBtn_@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path>
+                            </svg>
+                            Beğenmekten Vazgeç @item.LikeCount
+                        </button>
+                    }
+                    <button type="button" class="btn btn-outline-danger" onclick="selectShared(@item.Id)" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
                             <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"></path>
                             <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1z"></path>
                         </svg>
-                        Yorum
+                        Yorum Yap
                     </button>
-                    <button type="button" class="btn btn-dark">
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="comment">Yorum</label>
+                                    <input type="text" class="form-control" id="comment" />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="addNewComment(0)">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-dark" onclick="sharedNew(@item.Id)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
                             <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
                         </svg>
                         Paylaş
                     </button>
                 </div>
+            </div>
+            <div class="accordion accordion-flush w-75 m-auto" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne_@item.Id" aria-expanded="false" aria-controls="flush-collapseOne_@item.Id"
+                                onclick="getComments(@item.Id)">
+                            Yorumlar
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne_@item.Id" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body" id="comments_@item.Id"></div>
+                    </div>
+                </div>
+                
             </div>
         }
     </article>
@@ -51,10 +112,200 @@
         <ul style="list-style-type:none">
             @foreach (var item in Model.Item2)
             {
-                <li >
-                    @item.Username <button class="btn btn-primary ml-2">Takip Et</button>
+                <li id="user_@item.Id">
+                    @item.Username <button class="btn btn-primary ml-2" onclick="followUser(@item.Id)">Takip Et</button>
                 </li>
             }
         </ul>
     </aside>
 </section>
+
+<script>
+    var selectedShared = 0
+    var selectedComment = 0
+
+    function selectShared(id) {
+        selectedShared=id
+    }
+
+    function selectComment(id) {
+        selectedComment=id
+    }
+
+    function getComments(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                var response = xhr.responseText;
+                var json = JSON.parse(response);
+                var dizi = Array.from(json);
+                var div = document.getElementById("comments_" + id)
+                div.innerHTML=""
+                var ul = document.createElement("ul");
+                console.log(dizi)
+                var accordion = document.createElement("div")
+                accordion.id="accordion_"+id
+
+                dizi.filter(x => x.TopCommentId == 0).forEach(x => {
+                    var btn = document.createElement("button")
+                    btn.innerText = x.Comment
+                    btn.className = "btn btn-light"
+                    btn.addEventListener("click", function () {
+                        var ansDiv = document.getElementById("answerList_" + x.Id)
+                        if (ansDiv.style.display == "none") {
+                            ansDiv.style.display = "block"
+                            selectedShared = x.SharedId
+                            selectedComment=x.Id
+                        }
+                        else {
+                            ansDiv.style.display = "none"
+                            selectedComment = 0
+                            selectedShared=0
+                        }
+                    })
+                    accordion.appendChild(btn)
+                    var answerDiv = document.createElement("div")
+                    answerDiv.id="answerDiv_"+x.Id
+                    var hrr = document.createElement("hr")
+                    answerDiv.appendChild(hrr)
+                    dizi.filter(y => y.TopCommentId == x.Id).forEach(y => {
+                        var b = document.createElement("button")
+                        b.innerText = y.Comment
+                        b.className = "btn btn-danger"
+                        answerDiv.appendChild(b)
+                        var hrr = document.createElement("hr")
+                        answerDiv.appendChild(hrr)
+                    })
+                    var txt = document.createElement("input")
+                    txt.type = "text"
+                    txt.className = "form-control"
+                    txt.id="comment_"+x.Id
+                    var ansBtn = document.createElement("button")
+                    ansBtn.className="btn btn-primary mt-2"
+                    ansBtn.innerText = "Cevapla"
+                    ansBtn.addEventListener("click", function () {
+                        addNewComment(1)
+                    })
+                    answerDiv.appendChild(txt)
+                    answerDiv.appendChild(ansBtn)
+                    answerDiv.id = "answerList_" + x.Id
+                    answerDiv.style.display="none"
+                    accordion.appendChild(answerDiv)
+                    var hr = document.createElement("hr")
+                    accordion.appendChild(hr)
+                })
+                div.appendChild(accordion)
+            }
+        }
+        xhr.open("GET", "/Home/GetSharedComments?id="+id, true);
+        xhr.send();
+    }
+
+    function addNewComment(IsAns) {
+        var dto = {
+            topCommentId: IsAns == 0 ? 0 : selectedComment,
+            sharedId: selectedShared,
+            comment: IsAns == 0 ? $("#comment").val() : $("#comment_" + selectedComment).val()
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var response = xhr.responseText
+                var json = JSON.parse(response)
+                console.log(json)
+                if (json.StatusCode == 200) {
+                    var comment = json.Data
+                    if (selectedComment == 0) {
+                        var div = document.getElementById("accordion_" + selectedShared)
+                        if (div != null) {
+                            var btn = document.createElement("button")
+                            btn.className = "btn btn-light"
+                            btn.innerText = comment.Comment
+
+                            div.appendChild(btn)
+                            var hr = document.createElement("hr")
+                            div.appendChild(hr)
+                        }
+                    }
+                    else {
+                        var d = document.getElementById("answerList_" + selectedComment)
+                        console.log(selectedShared)
+                            var bt = document.createElement("button")
+                            bt.innerText = comment.Comment
+                            bt.className = "btn btn-danger"
+                            d.appendChild(bt)
+                    }
+                    swal("Tamamlandı!", "İşlem Başarılı!", "success");
+                    selectedComment = 0
+                    selectedShared = 0
+                }
+                else {
+                    swal("Eklenirken Bir Sorun Oluştu", "İşlem Başarısız!", "error")
+                }
+            }
+        }
+        xhr.open("POST", "/Home/AddNewComment?json="+JSON.stringify(dto), true)
+        xhr.send()
+    }
+
+
+    function followUser(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.responseText == 1) {
+                    document.getElementById("user_" + id).remove();
+                    swal("Takip Edildi!", "İşlem Başarılı!", "success");
+                }
+                else {
+                    swal("Bir Hata Oluştu!", "İşlem Başarısız!", "info");
+                }
+            }
+        }
+        xhr.open("POST", "/Home/Follow?id="+id, true)
+        xhr.send();
+    }
+
+    function sharedNew(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.responseText == 1) {
+                    swal("Paylaşıldı!", "İşlem Başarılı!", "success");
+                }
+                else {
+                    swal("Bir Hata Oluştu!", "İşlem Başarısız!", "info");
+                }
+            }
+        }
+        xhr.open("POST", "/Home/SharedRepeat?id=" + id, true)
+        xhr.send();
+    }
+
+
+    function likeShared(sharedId) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.responseText == 1) {
+                    swal("Beğenildi!", "İşlem Başarılı!", "success");
+                    var likeBtn = document.getElementById("likeBtn_" + sharedId)
+                    likeBtn.innerText = "Beğenmekten Vazgeç"
+                    likeBtn.className = "btn btn-warning"
+                }
+                else if (xhr.responseText == -1) {
+                    swal("Beğenmekten Vazgeçildi!", "İşlem Başarılı!", "success");
+                    var likeBtn = document.getElementById("likeBtn_" + sharedId)
+                    likeBtn.innerText = "Beğen"
+                    likeBtn.className = "btn btn-success"
+                }
+                else {
+                    swal("Bir Hata Oluştu!", "İşlem Başarısız!", "info");
+                }
+            }
+        }
+        xhr.open("POST", "/Home/LikeShared?sharedId=" + sharedId, true)
+        xhr.send();
+    }
+</script>

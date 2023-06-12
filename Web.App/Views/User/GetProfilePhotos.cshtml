@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<CoreLayer.Dtos.User.UserPhotoDto>
    
-<div class="row">
-    @foreach (var item in Model)
+<div class="row mt-4">
+    @if (Model.Count() > 0)
     {
+        foreach (var item in Model)
+        {
         <div class="col-3" style="height:280px">
             <div class="card">
                 <div class="card-header">@item.CreatedDate</div>
@@ -13,8 +15,16 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    @Html.Raw(item.IsMain ? "<button class='btn btn-success'>Aktif</button>" : "<button class='btn btn-light'>Pasif</button>")
+                    @Html.Raw(item.IsMain ? "<button class='btn btn-success btnPhoto' id='btnPhoto_"+item.Id+"' onclick='mainProfileImage(" + item.Id+")'>Aktif</button>" : "<button class='btn btn-light btnPhoto' id='btnPhoto_"+item.Id+"' onclick='mainProfileImage(" + item.Id+")'>Pasif</button>")
                 </div>
             </div>
         </div>
-    }</div>
+        }
+    }
+else
+            {
+        <div class="col-12">
+            <h5>Henüz Fotoğraf Yüklemedin!</h5>
+        </div>
+            }
+</div>

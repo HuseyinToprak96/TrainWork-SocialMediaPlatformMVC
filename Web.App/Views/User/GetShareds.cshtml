@@ -1,49 +1,52 @@
 ﻿@model IEnumerable<CoreLayer.Dtos.Shared.SharedListDto>
 
 <div class="row">
-    <fieldset style="border:1px solid black;border-radius:10px; margin-top:30px">
-        <legend style="border:1px solid black; margin-top:20px;text-align:center;padding:20px;background-color:cornflowerblue;border-radius:10px">Yeni Paylaşım Oluştur</legend>
+    <fieldset style="border:1px solid black;border-radius:10px; margin-top:15px">
+        <legend style="border:1px solid black; margin-top:10px;text-align:center;padding:20px;background-color:cornflowerblue;border-radius:10px">Yeni Paylaşım Oluştur</legend>
 
             <label for="title">Başlık</label>
             <input type="text" class="form-control" id="title" name="Title" />
             <br />
             <label for="file">Dosya Seç</label>
             <input type="file" id="file" class="form-control" name="File"/>
+        <br/>
             <label for="description">Açıklama</label>
-            <textarea class="form-control" rows="6" name="Description" id="description">
+            <textarea class="form-control" rows="4" name="Description" id="description">
 </textarea>
             <br />
-            <input type="submit" class="btn btn-primary mb-3" value="Paylaş" />
+        <label for="IsActive">Yayınla</label>
+        <input type="checkbox" class="form-check" name="IsActive" id="isActive"/>
+            <input type="submit" class="btn btn-primary mb-3" value="Paylaş" onclick="AddNewShared()" />
 
     </fieldset>
 </div>
-<h4>Önceki Gönderiler</h4>
 <div class="row mt-4">
+    <h4>Önceki Gönderiler</h4>
     @foreach (var item in Model)
     {
         <div class="col-8 offset-2 mt-3">
             <div class="card">
                 <div class="card-header">
-                <a href="#">@item.Username</a>    @item.Title
+                    <a href="#">@item.Username</a>    @item.Title
                 </div>
                 <div class="card-body" style="text-align:center">
                     @if (item.Type == CoreLayer.Enum.EFileType.Text)
                     {
-                    <p>
-                         @item.Description
-                    </p>
+                        <p>
+                            @item.Description
+                        </p>
                     }
                     else if (item.Type == CoreLayer.Enum.EFileType.Image)
-                {
-                        <img src="~/Content/images/@item.Path"/>
-                }
-                    else if (item.Type == CoreLayer.Enum.EFileType.Video)
-                {
-                <video width="360" height="320" controls="controls">
-                    <source src="~/Content/videos/@item.Path" type="video/mp4" />
-                </video>
+                    {
+                        <img src="~/Content/images/@item.Path" width="100%" height="200" />
                     }
-</div>
+                    else if (item.Type == CoreLayer.Enum.EFileType.Video)
+                    {
+                        <video width="360" height="320" controls="controls">
+                            <source src="~/Content/videos/@item.Path" type="video/mp4" />
+                        </video>
+                    }
+                </div>
                 <div class="card-footer">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
                         <div class="accordion-item">
@@ -94,9 +97,9 @@
                             }
                         </div>
 
-    </div>
-</div>
-                       
+                    </div>
+                </div>
+
             </div>
         </div>
     }

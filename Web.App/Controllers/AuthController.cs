@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Web.App.Filters;
 
 namespace Web.App.Controllers
 {
@@ -16,7 +17,7 @@ namespace Web.App.Controllers
     public class AuthController : Controller
     {
         private UserService _userService=new UserService();
-        private MailService _mailService=new MailService(); 
+        private MailService _mailService=new MailService();
         // GET: User
         public ActionResult Login(string ReturnUrl="")
         {
@@ -29,9 +30,8 @@ namespace Web.App.Controllers
             var user=await _userService.Login(loginDto);
             if (user.Data!=null)
             {
-                FormsAuthentication.SetAuthCookie(user.Data.Id.ToString(),false);
+                FormsAuthentication.SetAuthCookie(user.Data.Id.ToString(),false,"UserId");
                 Session["UserId"]=user.Data.Id;
-
                 return Redirect(returnUrl!=""?returnUrl:"/Home/Index");
             }
             return View();
