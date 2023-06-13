@@ -1,5 +1,6 @@
 ﻿using CoreLayer.Dtos.Shared;
 using CoreLayer.Dtos.User;
+using CoreLayer.Enum;
 using Newtonsoft.Json;
 using ServiceLayer.Services;
 using System;
@@ -13,18 +14,34 @@ using Web.App.Filters;
 
 namespace Web.App.Controllers
 {
-   
-    [Authorize]
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private SharedService _sharedService = new SharedService();
-        private UserService _userService= new UserService(); 
+        private UserService _userService= new UserService();
         public async Task<ActionResult> Index()
         {
             int userId = Convert.ToInt32(Session["UserId"]);
-            var shareds = await _sharedService.HomeSharedList(userId);
-            var users = await _userService.GetRecommendedPeople(userId);
-            return View(Tuple.Create<IEnumerable<SharedListDto>,IEnumerable<RecommendedPeopleDto>>(shareds.Data,users.Data));
+            if (userId > 0)
+            {
+                var shareds = await _sharedService.HomeSharedList(userId);
+                var users = await _userService.GetRecommendedPeople(userId);
+                return View(Tuple.Create<IEnumerable<SharedListDto>, IEnumerable<RecommendedPeopleDto>>(shareds.Data, users.Data));
+            }
+            return Redirect("/");
+        }
+        [HttpPost]
+        public async Task<ActionResult> Index(SharedFilterDto sharedFilterDto)
+        {
+            
+            int userId = Convert.ToInt32(Session["UserId"]);
+            if (userId > 0)
+            {
+                var shareds = await _sharedService.GetSharedFilter(sharedFilterDto);
+                var users = await _userService.GetRecommendedPeople(userId);
+                return View(Tuple.Create<IEnumerable<SharedListDto>, IEnumerable<RecommendedPeopleDto>>(shareds.Data, users.Data));
+            }
+            return Redirect("/");
         }
 
         public ActionResult About()

@@ -20,5 +20,6 @@ namespace CoreLayer.Interfaces.Service
         Task<CustomResponseDto<IEnumerable<CommentListDto>>> GetSharedCommentList(int sharedId);
         Task<CustomResponseDto<bool>> SharedRepeat(int sharedId,int userId);
         Task<CustomResponseDto<bool>> AddLike(SharedLikeDto sharedLikeDto);
+        Task<CustomResponseDto<IEnumerable<SharedListDto>>> GetSharedFilter(SharedFilterDto sharedFilterDto);
     }
 }

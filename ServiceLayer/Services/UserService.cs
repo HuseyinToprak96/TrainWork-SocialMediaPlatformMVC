@@ -102,7 +102,8 @@ namespace ServiceLayer.Services
             List<RecommendedPeopleDto> list=new List<RecommendedPeopleDto>();
             foreach (var item in users)
             {
-                RecommendedPeopleDto recommendedPeopleDto=new RecommendedPeopleDto { Id=item.Id, Username=item.Username, Image=_userProfileImageRepository.Where(x=>x.UserId==item.Id && x.IsMain==true).FirstOrDefault()?.Path };
+                var data = _userProfileImageRepository.Where(x => x.UserId == item.Id && x.IsMain == true).FirstOrDefault();
+                RecommendedPeopleDto recommendedPeopleDto=new RecommendedPeopleDto { Id=item.Id, Username=item.Username, Image=data.Path};
                 list.Add(recommendedPeopleDto);
             }
             return CustomResponseDto<IEnumerable<RecommendedPeopleDto>>.Success(200,list);

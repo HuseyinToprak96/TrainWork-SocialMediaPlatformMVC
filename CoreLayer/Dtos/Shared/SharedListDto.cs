@@ -16,6 +16,7 @@ namespace CoreLayer.Dtos.Shared
         public string Username { get; set; }
         public int LikeCount { get; set; }
         public bool isLike { get; set; } = false;
+        public DateTime CreatedDate { get; set; }
         public EFileType Type { get; set; }
         public List<CommentListDto> CommentList { get; set; }
     }

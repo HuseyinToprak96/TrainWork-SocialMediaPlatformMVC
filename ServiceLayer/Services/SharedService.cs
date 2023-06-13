@@ -1,6 +1,7 @@
 ﻿using CoreLayer.Dtos.GenericDtos;
 using CoreLayer.Dtos.Shared;
 using CoreLayer.Entities.Shared;
+using CoreLayer.Enum;
 using CoreLayer.Interfaces.Service;
 using RepositoryLayer.Repositories;
 using System;
@@ -73,8 +74,32 @@ namespace ServiceLayer.Services
                               Id = c.Id,
                               TopCommentId = c.TopCommentId,
                               SharedId = Convert.ToInt32(c.SharedId)
-                          });
+                          }).OrderByDescending(x=>x.CreatedDate).AsEnumerable();
             return CustomResponseDto<IEnumerable<CommentListDto>>.Success(200, result);
+        }
+
+        public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> GetSharedFilter(SharedFilterDto sharedFilterDto)
+        {
+            var users = await _userRepository.GetAllAsync();
+            var shareds = await _sharedRepository.GetAllAsync();
+            if(sharedFilterDto.sharedType>0)
+            shareds = shareds.Where(x => x.Type==(EFileType)sharedFilterDto.sharedType).ToList();
+            if(!string.IsNullOrWhiteSpace(sharedFilterDto.username))
+            users = users.Where(x => x.Username == sharedFilterDto.username).ToList();
+            var data = (from s in shareds
+                        join u in users
+                        on s.UserId equals u.Id
+                        select new SharedListDto
+                        {
+                        Id = s.Id,
+                        Username=u.Username,
+                        Title=s.Title,
+                        Description=s.Description,
+                        CreatedDate=s.CreatedDate,
+                        Path = s.Path,
+                        Type = s.Type
+                        });
+            return CustomResponseDto<IEnumerable<SharedListDto>>.Success(200, data);
         }
 
         public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> GetUserShareds(int userId)
@@ -85,6 +110,7 @@ namespace ServiceLayer.Services
             var result = (from s in await _sharedRepository.GetAllAsync()
                           join u in await _userRepository.GetAllAsync()
                           on s.UserId equals u.Id
+                          where s.UserId== userId
                           select new SharedListDto
                           {
                                Description = s.Description,
@@ -114,6 +140,7 @@ namespace ServiceLayer.Services
             return CustomResponseDto<IEnumerable<SharedListDto>>.Success(200, result);
         }
 
+
         public async Task<CustomResponseDto<IEnumerable<SharedListDto>>> HomeSharedList(int userId)
         {
             var users=await _userRepository.GetAllAsync();
@@ -128,7 +155,8 @@ namespace ServiceLayer.Services
                              LikeCount = _sharedLikeRepository.Where(x=>x.SharedId==s.Id).Count(),
                              Type = s.Type,
                              Username =users.FirstOrDefault(x=>x.Id==s.UserId).Username,
-                         }).ToList();
+                             CreatedDate=s.CreatedDate
+                         }).OrderByDescending(x=>x.CreatedDate).ToList();
             foreach (var item in datas)
             {
                 if (await _sharedLikeRepository.AnyAsync(x=>x.UserId==userId && x.SharedId==item.Id))

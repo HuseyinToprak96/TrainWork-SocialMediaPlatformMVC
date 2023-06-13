@@ -63,6 +63,7 @@
     <Compile Include="Dtos\Shared\CommentDeleteorUpdateDto.cs" />
     <Compile Include="Dtos\Shared\CommentListDto.cs" />
     <Compile Include="Dtos\Shared\SharedAddorUpdateDto.cs" />
+    <Compile Include="Dtos\Shared\SharedFilterDto.cs" />
     <Compile Include="Dtos\Shared\SharedLikeDto.cs" />
     <Compile Include="Dtos\Shared\SharedListDto.cs" />
     <Compile Include="Dtos\User\CreateUserDto.cs" />
