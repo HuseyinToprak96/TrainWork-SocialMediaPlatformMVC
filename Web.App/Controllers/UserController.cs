@@ -1,6 +1,8 @@
 ﻿using CoreLayer.Dtos.Shared;
 using CoreLayer.Dtos.User;
+using CoreLayer.Entities.Notification;
 using CoreLayer.Enum;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using ServiceLayer.Services;
 using System;
@@ -14,10 +16,9 @@ using Web.App.Filters;
 namespace Web.App.Controllers
 {
     [AllowAnonymous]
-    public class UserController : Controller
+    public class UserController : BaseController
     {
-        private UserService _userService=new UserService();
-        private SharedService _sharedService=new SharedService();
+        
         public new async Task<ActionResult> Profile()
         {
             int userId =Convert.ToInt32(Session["UserId"]);
@@ -135,6 +136,16 @@ namespace Web.App.Controllers
                 }
             }
             await _sharedService.AddAsync(shared);
+            shared= _sharedService.Where(x=>x.UserId==userId).Data.OrderByDescending(x=>x.Id).FirstOrDefault();
+            var user=await _userService.GetAsync(userId);
+            var followers = await _userService.GetIdUserFollowers(userId);
+            List<Notification> notifications = new List<Notification>();
+            followers.Data.ForEach(x =>
+            {
+                Notification notification = new Notification { Content = user.Data.Username+" adlı kullanıcının, "+shared.Title+" başlıklı gönderisini incele.", UserId=x, Link=$"{shared.Id}" , NotificationType=ENotificationType.Shared};
+                notifications.Add(notification);
+            });
+            var result= await _notificationService.AddRangeAsync(notifications);
             return RedirectToAction("Profile");
         }
 

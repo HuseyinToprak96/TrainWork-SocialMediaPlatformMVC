@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLayer.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,6 @@ namespace CoreLayer.Entities.Notification
         public string Content { get; set; }
         public bool IsSeen { get; set; } = false;//Görüldü mü? Görülmemiş olan bildirimler kullanıcıya 1 2 3 şeklinde gösterilecek. göründükten sonra true olacak
         public string Link { get; set; }//Bilgirime tıkladığımızda açılacak Controller/Action
+        public ENotificationType NotificationType { get; set; }
     }
 }

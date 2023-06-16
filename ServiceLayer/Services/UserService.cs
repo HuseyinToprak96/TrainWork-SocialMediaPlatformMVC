@@ -274,6 +274,17 @@ namespace ServiceLayer.Services
             }
             return CustomResponseDto<bool>.Fail(404,"User Not Found!");
         }
+
+        public async Task<CustomResponseDto<IEnumerable<int>>> GetIdUserFollowers(int id)
+        {
+            if (await _userRepository.AnyAsync(x => x.Id == id))
+            {
+                var users = await _userRepository.GetUserFollowers(id);
+                var datas = users.Select(x => x.Id);
+                return CustomResponseDto<IEnumerable<int>>.Success(200, datas);
+            }
+            return CustomResponseDto<IEnumerable<int>>.Fail(404, "Kullanıcı Bulunamadı!");
+        }
     }
     
 }

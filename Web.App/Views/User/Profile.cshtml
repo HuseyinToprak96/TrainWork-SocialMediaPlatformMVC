@@ -81,12 +81,20 @@
     function getBiography() {
         $("#menu1").load("/User/GetBiography")
     }
+    var bio = ""
+
+    function bioChange() {
+        console.log("aa")
+        bio = document.getElementById("editor1").value
+        console.log(bio)
+    }
 
     function BioUpdate() {
+        console.log($("#editor1"))
         var dto = {
             biography: $("#editor1").val()
         }
-
+        console.log(dto)
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.status == 200 && xhr.readyState == 4) {

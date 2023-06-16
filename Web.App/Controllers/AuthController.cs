@@ -14,10 +14,8 @@ using Web.App.Filters;
 namespace Web.App.Controllers
 {
     [AllowAnonymous]
-    public class AuthController : Controller
+    public class AuthController : BaseController
     {
-        private UserService _userService=new UserService();
-        private MailService _mailService=new MailService();
         // GET: User
         public ActionResult Login(string ReturnUrl="")
         {

@@ -11,6 +11,18 @@ namespace RepositoryLayer.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
+        public async Task<IEnumerable<User>> GetUserFollowers(int id)
+        {
+            var followerIds = _db.Follows.Where(x => x.FollowingId == id).Select(x => x.FollowerId).ToList();
+            List<User> users = new List<User>();
+            foreach (var item in followerIds)
+            {
+                var user=await _db.Users.FirstOrDefaultAsync(x=>x.Id == item);
+                users.Add(user);
+            }
+            return users;
+        }
+
         public async Task<IEnumerable<User>> GetUsersNotFollow(int id)
         {
             var followingIds = _db.Follows.Where(x => x.FollowerId == id).Select(x => x.FollowingId);

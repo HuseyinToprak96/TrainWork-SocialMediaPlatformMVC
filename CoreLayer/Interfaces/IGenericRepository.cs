@@ -13,6 +13,7 @@ namespace CoreLayer.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         IQueryable<T> Where(Expression<Func<T, bool>> expression); //İstediğimiz Filtrede arama yapabiliriz.
         Task AddAsync(T entity);
+        Task AddRangeAsync(IEnumerable<T> values);
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
         Task<bool> AnyAsync(Expression<Func<T, bool>> expression);// var mı yok mu? Kontrol için

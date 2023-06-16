@@ -58,6 +58,8 @@
     <Compile Include="Dtos\GenericDtos\NoContentDto.cs" />
     <Compile Include="Dtos\Mail\MailDto.cs" />
     <Compile Include="Dtos\Notification\NotificationDto.cs" />
+    <Compile Include="Dtos\Page\PageDto.cs" />
+    <Compile Include="Dtos\Page\PageNavLinkDto.cs" />
     <Compile Include="Dtos\Shared\CommentAddDto.cs" />
     <Compile Include="Dtos\Shared\CommentAnswerDto.cs" />
     <Compile Include="Dtos\Shared\CommentDeleteorUpdateDto.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Dtos\User\UserAddorUpdateProfileImageDto.cs" />
     <Compile Include="Dtos\User\UserPhotoDto.cs" />
     <Compile Include="Dtos\User\UserSearchFilterDto.cs" />
+    <Compile Include="Entities\Page\Page.cs" />
     <Compile Include="Entities\User\Follow.cs" />
     <Compile Include="Enum\EFileType.cs" />
     <Compile Include="Enum\EGender.cs" />
@@ -89,11 +92,16 @@
     <Compile Include="Entities\Shared\Shared.cs" />
     <Compile Include="Entities\User\User.cs" />
     <Compile Include="Entities\User\UserProfileImages.cs" />
+    <Compile Include="Enum\ENotificationType.cs" />
     <Compile Include="Enum\EStatusCode.cs" />
     <Compile Include="Interfaces\IGenericRepository.cs" />
+    <Compile Include="Interfaces\INotificationRepository.cs" />
+    <Compile Include="Interfaces\IPageRepository.cs" />
     <Compile Include="Interfaces\ISharedRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Entities\NotificationEntity\Notification.cs" />
+    <Compile Include="Interfaces\Service\INotificationService.cs" />
+    <Compile Include="Interfaces\Service\IPageService.cs" />
     <Compile Include="Interfaces\Service\IService.cs" />
     <Compile Include="Interfaces\Service\ISharedService.cs" />
     <Compile Include="Interfaces\Service\IUserService.cs" />

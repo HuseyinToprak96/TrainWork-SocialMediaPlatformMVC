@@ -19,6 +19,12 @@ namespace ServiceLayer.Services
             return CustomResponseDto<T>.Success(200,entity);
         }
 
+        public async Task<CustomResponseDto<IEnumerable<T>>> AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _genericRepository.AddRangeAsync(entities);
+            return CustomResponseDto<IEnumerable<T>>.Success(200, entities);
+        }
+
         public async Task<CustomResponseDto<bool>> AnyAsync(Expression<Func<T, bool>> expression)
         {
             return CustomResponseDto<bool>.Success(200,await _genericRepository.AnyAsync(expression));

@@ -1,6 +1,7 @@
 ﻿using CoreLayer.Entities;
 using CoreLayer.Entities.HelperTables;
 using CoreLayer.Entities.Notification;
+using CoreLayer.Entities.Page;
 using CoreLayer.Entities.Shared;
 using CoreLayer.Entities.User;
 using RepositoryLayer.Configurations;
@@ -30,6 +31,7 @@ namespace RepositoryLayer.DataContext
         public DbSet<SharedLike> SharedLikes { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Page> Pages { get; set; }
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Northwind;Trusted_Connection=true");//asp.net core

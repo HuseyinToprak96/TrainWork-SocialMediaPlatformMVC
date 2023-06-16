@@ -31,5 +31,7 @@ namespace CoreLayer.Interfaces.Service
         CustomResponseDto<int> GetFollowersCount(int userId);
         CustomResponseDto<int> GetFollowingsCount(int userId);
         Task<CustomResponseDto<bool>> RemoveFollowerOrFollowingRemove(int followerId, int followingId);
+        Task<CustomResponseDto<IEnumerable<int>>> GetIdUserFollowers(int id);
+
     }
 }

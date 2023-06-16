@@ -12,5 +12,6 @@ namespace CoreLayer.Interfaces
     {
         Task<User> Login(string UsernameOrEmail);//Buradan dönen byte[] password ile girilen password kıyaslanacak
         Task<IEnumerable<User>> GetUsersNotFollow(int id);
+        Task<IEnumerable<User>> GetUserFollowers(int id);
     }
 }

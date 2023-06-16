@@ -70,9 +70,19 @@
     <Compile Include="Migrations\202306111446433_createdSharedCol.designer.cs">
       <DependentUpon>202306111446433_createdSharedCol.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306141959086_pagesTableCreated.cs" />
+    <Compile Include="Migrations\202306141959086_pagesTableCreated.designer.cs">
+      <DependentUpon>202306141959086_pagesTableCreated.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306161303413_addNewPropertyNotificationType.cs" />
+    <Compile Include="Migrations\202306161303413_addNewPropertyNotificationType.designer.cs">
+      <DependentUpon>202306161303413_addNewPropertyNotificationType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\NotificationRepository.cs" />
+    <Compile Include="Repositories\PageRepository.cs" />
     <Compile Include="Repositories\SharedRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
@@ -92,6 +102,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202306111446433_createdSharedCol.resx">
       <DependentUpon>202306111446433_createdSharedCol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306141959086_pagesTableCreated.resx">
+      <DependentUpon>202306141959086_pagesTableCreated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306161303413_addNewPropertyNotificationType.resx">
+      <DependentUpon>202306161303413_addNewPropertyNotificationType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
