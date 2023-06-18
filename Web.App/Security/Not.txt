@@ -1,0 +1,30 @@
+﻿ASP.NET ile web sitesi geliştirirken bazı yaygın güvenlik sorunları aşağıdaki gibi olabilir:
+
+Cross-Site Scripting (XSS): Bu saldırı türünde, kötü niyetli kullanıcılar tarafından enjekte edilen zararlı
+kodlar web uygulamasının güvenli olmayan giriş noktaları üzerinden yayılır ve kullanıcıların tarayıcısında
+çalışır. Bu nedenle, giriş doğrulaması ve veri filtrelemesi gibi önlemler alarak XSS saldırılarına karşı
+koruma sağlamak önemlidir.
+
+SQL Injection: Bu saldırı türünde, kullanıcı tarafından sağlanan verilerin doğru bir şekilde işlenmediği
+durumlarda, kötü niyetli kullanıcılar tarafından SQL kodu enjekte edilir. Bu, veritabanı sorgularının manipüle
+edilmesine ve hassas verilerin çalınmasına yol açabilir. Parametreli sorguların kullanımı ve veri doğrulaması
+gibi önlemler SQL Injection saldırılarına karşı koruma sağlar.
+
+Cross-Site Request Forgery (CSRF): Bu saldırı türünde, kötü niyetli bir web sitesi veya bağlantılı bir içerik,
+kullanıcının kimlik bilgilerini kullanarak kullanıcının bilgisi olmadan istekler gönderebilir.
+CSRF saldırılarına karşı korunmak için oturum doğrulaması, rastgele tokenler ve istek doğrulama önlemleri
+kullanılmalıdır.
+
+Kimlik Doğrulama ve Yetkilendirme Hataları: Web sitesinde kullanıcı kimlik doğrulama ve yetkilendirme
+mekanizmalarının güvenli bir şekilde uygulanması önemlidir. Kullanıcı kimlik doğrulaması için güvenli
+parola yönetimi, oturum yönetimi ve kimlik doğrulama hatalarının ayrıntılı hata mesajları vermemesi gibi
+önlemler alınmalıdır.
+
+Veri Doğrulama ve Filtreleme: Kullanıcı tarafından sağlanan verilerin doğru bir şekilde doğrulanması ve
+filtrelenmesi önemlidir. Veri doğrulama ve filtreleme olmadığında, kötü niyetli kullanıcılar tarafından
+enjekte edilen zararlı veriler uygulamanın güvenlik açıklarını sömürebilir.
+
+Dosya Yükleme Güvenliği: Kullanıcıların dosya yükleyebildiği bir web sitesi geliştirirken, dosya türü
+doğrulaması, boyut sınırlamaları ve dosya yolu manipülasyonu gibi güvenlik önlemleri alınmalıdır. Kötü
+niyetli kullanıcılar tarafından zararlı dosyaların yüklenmesi veya mevcut dosyaların üzerine yazılması
+engellenmelidir.

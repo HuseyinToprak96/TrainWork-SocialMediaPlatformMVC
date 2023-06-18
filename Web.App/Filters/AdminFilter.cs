@@ -1,29 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Security;
 
-namespace Web.App.Filters
+public class AdminFilter : AuthorizeAttribute
 {
-    public class AdminFilter:ActionFilterAttribute
+    protected override bool AuthorizeCore(System.Web.HttpContextBase httpContext)
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        // Yetkilendirme işlemini burada özelleştirin
+        // Kullanıcının yetkisi varsa true, yoksa false döndürün
+        // Örneğin, kullanıcının belirli bir role sahip olması gerekiyorsa:
+        var data = httpContext.User;
+        if (httpContext.User.IsInRole("Admin"))
         {
-
-
-            //int id = Convert.ToInt32(Session["Id"]);
-            var data = FormsAuthentication.GetAuthCookie("RoleId", false);
-            if (true)
-            {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary{
-                    {"action","Login" },
-                    { "controller","Auth"}
-                });
-            }
-            base.OnActionExecuting(context);
+            return true;
         }
+
+        return false;
+    }
+
+    protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+    {
+        // Yetkilendirme başarısız olduğunda yönlendirme yapılacak sayfayı burada belirtin
+        filterContext.Result = new RedirectResult("~/Error/Unauthorized");
     }
 }

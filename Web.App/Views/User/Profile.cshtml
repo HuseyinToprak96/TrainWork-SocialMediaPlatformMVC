@@ -7,7 +7,7 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs mt-3">
     <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="tab" href="#home" onclick="">Kişisel Bilgiler</a>
+        <a class="nav-link active" data-bs-toggle="tab" href="#home" onclick="Info()">Kişisel Bilgiler</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#menu1" onclick="getBiography()">Biyografi</a>
@@ -69,7 +69,7 @@
                 else {
 
                     swal("Tamamlandı!", "İşlem Başarılı!", "success");
-                    document.getElementById("profileImage").src = "~/Content/images/" + response
+                    Info()
             }
             }
         }
@@ -212,4 +212,46 @@
         xhr.send()
     }
 
+
+    function sharedRemove(id) {
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function () {
+            if (xhr.responseText == 1) {
+                document.getElementById("shared_" + id).remove()
+                swal("Tamamlandı!", "İşlem Başarılı!", "success");
+            }
+            else {
+                swal("Hata Oluştu!", "Gönderi Bulunamadı!", "info");
+
+            }
+        }
+        xhr.open("POST","/User/RemoveShared?id="+id,true)
+        xhr.send();
+    }
+    function getEditForm(id) {
+        $("#editSharedDiv").load("/User/GetShared?id="+id)
+    }
+
+
+    function UpdateShared(id) {
+        var dto = {
+            title: $("#title2").val(),
+            description: $("#description2").val(),
+            isActive: document.getElementById("isActive2").checked,
+            sharedId:id
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                if (xhr.responseText == 0) {
+                    swal("Hata Var!", "Güncellenemedi!", "error");
+                }
+                else {
+                    swal("Tamamlandı!", "İşlem Başarılı!", "success");
+                }
+            }
+        }
+        xhr.open("Post", "/User/UpdateShared?json=" + JSON.stringify(dto), true)
+        xhr.send();
+    }
 </script>

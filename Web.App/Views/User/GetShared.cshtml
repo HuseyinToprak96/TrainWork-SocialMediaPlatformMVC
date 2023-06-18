@@ -1,0 +1,35 @@
+﻿@model CoreLayer.Entities.Shared.Shared
+<div class="row">
+    <fieldset style="border:1px solid black;border-radius:10px; margin-top:15px">
+        <legend style="border:1px solid black; margin-top:10px;text-align:center;padding:20px;background-color:cornflowerblue;border-radius:10px">@Model.Title</legend>
+
+        <label for="title2">Başlık</label>
+        <input type="text" class="form-control" id="title2" name="Title" value="@Model.Title" />
+        <br />
+        @if (Model.Type == CoreLayer.Enum.EFileType.Text)
+        {
+            <p>
+                @Model.Description
+            </p>
+        }
+        else if (Model.Type == CoreLayer.Enum.EFileType.Image)
+        {
+            <img src="~/Content/images/@Model.Path" width="100%" height="200" />
+        }
+        else if (Model.Type == CoreLayer.Enum.EFileType.Video)
+        {
+            <video width="360" height="320" controls="controls">
+                <source src="~/Content/videos/@Model.Path" type="video/mp4" />
+            </video>
+        }
+        <br />
+        <label for="description2">Açıklama</label>
+        <textarea class="form-control" rows="4" name="Description" id="description2">
+@Model.Description
+</textarea>
+        <br />
+        <label for="IsActive2">Yayınla</label>
+        <input type="checkbox" class="form-check" name="IsActive" id="isActive2" @(Model.IsActive ? "checked" : "") ) />
+        <input type="submit" class="btn btn-primary mb-3" value="Güncelle" onclick="UpdateShared(@ViewBag.Id)" />
+    </fieldset>
+</div>

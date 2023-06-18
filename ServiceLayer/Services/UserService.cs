@@ -258,8 +258,8 @@ namespace ServiceLayer.Services
                 await _userRepository.UpdateAsync(user);
                 if (!String.IsNullOrWhiteSpace(userInfoUpdateDto.ImagePath))
                 {
-                    var images = _userProfileImageRepository.Where(x => x.UserId == userInfoUpdateDto.UserId);
-                    foreach (var image in images.ToList())
+                    var images = _userProfileImageRepository.Where(x => x.UserId == userInfoUpdateDto.UserId).ToList();
+                    foreach (var image in images)
                     {
                         image.IsMain = false;
                         await _userProfileImageRepository.UpdateAsync(image);

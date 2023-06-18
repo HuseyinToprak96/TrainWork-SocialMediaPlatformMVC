@@ -8,6 +8,7 @@ using WebGrease.Css.Extensions;
 
 namespace Web.App.Controllers
 {
+
     public class NotificationController : BaseController
     {
         // GET: Notification
@@ -18,10 +19,23 @@ namespace Web.App.Controllers
             List<NotificationDto> notificationList = new List<NotificationDto>();
             result.Data.OrderByDescending(x=>x.Id).ForEach(x =>
             {
-                NotificationDto notification = new NotificationDto { Id = x.Id, Content = x.Content, IsSeen = x.IsSeen, Link = x.Link };
+                NotificationDto notification = new NotificationDto { Id = x.Id, Content = x.Content, IsSeen = x.IsSeen, Link = x.Link, notificationType=x.NotificationType };
                 notificationList.Add(notification);
             } );
             return PartialView(notificationList);
+        }
+        [Route("/Bildirim/{shared}/{href}")]
+        public ActionResult Get(string shared,string href)
+        {
+            //Like //Shared //Answer olayları burda listelenecek
+            //Her halükarda Shared getirilecek href kısmı ise olayın id si olacak ve sayfa açıldığında uygun notification gösterilebilsin
+            return View();
+        }
+        [Route("/Bildirim/{follow}")]
+        public ActionResult Get2(string follow)
+        {
+            //Follow
+            return View();
         }
     }
 }

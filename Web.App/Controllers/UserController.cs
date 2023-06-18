@@ -12,10 +12,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web.App.Filters;
+using Web.App.Framework;
 
 namespace Web.App.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
+    [LoginFilter]
+    [LogFilter]
     public class UserController : BaseController
     {
         
@@ -45,6 +48,8 @@ namespace Web.App.Controllers
                 HttpPostedFileBase file = Request.Files[i];
                 if (file != null && file.ContentLength > 0)
                 {
+                    //ImageSize imageSize = new ImageSize();
+                    //imageSize.Execute(file);
                     int fileSize = file.ContentLength;
                     fileName =Guid.NewGuid()+file.FileName;
                     string uzanti = file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
@@ -142,7 +147,7 @@ namespace Web.App.Controllers
             List<Notification> notifications = new List<Notification>();
             followers.Data.ForEach(x =>
             {
-                Notification notification = new Notification { Content = user.Data.Username+" adlı kullanıcının, "+shared.Title+" başlıklı gönderisini incele.", UserId=x, Link=$"{shared.Id}" , NotificationType=ENotificationType.Shared};
+                Notification notification = new Notification { Content = user.Data.Username+" adlı kullanıcının, "+shared.Title+" başlıklı gönderisini incele.", UserId=x, Link=$"{shared.Title}/#" , NotificationType=ENotificationType.Shared};
                 notifications.Add(notification);
             });
             var result= await _notificationService.AddRangeAsync(notifications);
@@ -172,6 +177,42 @@ namespace Web.App.Controllers
             if (result.StatusCode == 200)
                 return Json(1);
             return Json(result.Errors);
+        }
+
+        public async Task<JsonResult> RemoveShared(int id)
+        {
+            var control = await _sharedService.AnyAsync(x => x.Id == id && x.IsActive && !x.IsDeleted);
+            if (control.Data)
+            {
+                var shared = await _sharedService.GetAsync(id);
+                shared.Data.IsDeleted = true;
+                var result= await _sharedService.UpdateAsync(shared.Data);
+                if (result.StatusCode == 200)
+                {
+                    return Json(1);
+                }
+            }
+            return Json(0);
+        }
+
+        public async Task<PartialViewResult> GetShared(int id)
+        {
+            ViewBag.Id=id;
+            var sharedResult = await _sharedService.GetAsync(id);
+            return PartialView(sharedResult.Data);
+        }
+
+        public async Task<JsonResult> UpdateShared(string json)
+        {
+            var sharedAddorUpdateDto = JsonConvert.DeserializeObject<SharedAddorUpdateDto>(json);
+            int userId = Convert.ToInt32(Session["UserId"]);
+            var shared = await _sharedService.GetAsync(sharedAddorUpdateDto.SharedId);
+            shared.Data.Title=sharedAddorUpdateDto.Title;
+            shared.Data.Description=sharedAddorUpdateDto.Description;
+            var updateResult = await _sharedService.UpdateAsync(shared.Data);
+            if(updateResult.StatusCode==200)
+            return Json(1);
+            return Json(0);
         }
     }
 }

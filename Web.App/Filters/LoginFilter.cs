@@ -8,22 +8,32 @@ using System.Web.Security;
 
 namespace Web.App.Filters
 {
-    public class LoginFilter : ActionFilterAttribute
+    public class LoginFilter : AuthorizeAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-
-            var data = FormsAuthentication.GetAuthCookie("RoleId", false);
-            data.Value = data.Value.Trim();
-            //int id = Convert.ToInt32(Session["Id"]);
-            if (!FormsAuthentication.IsEnabled)
+            if (httpContext.User.Identity.IsAuthenticated)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary{
-                    {"action","Login" },
-                    { "controller","Auth"}
-                });
+                // Kullanıcı oturum açmışsa yetkilendirme başarılıdır
+                return true;
             }
-            base.OnActionExecuting(context);
+
+            return false;
+        }
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            if (filterContext.HttpContext.Request.IsAjaxRequest())
+            {
+                // Ajax isteği ise, 401 Unauthorized hatası döndür
+                filterContext.HttpContext.Response.StatusCode = 401;
+                filterContext.HttpContext.Response.End();
+            }
+            else
+            {
+                // Diğer durumlarda, giriş sayfasına yönlendir
+                filterContext.Result = new RedirectResult("/Auth/Login");
+            }
         }
     }
 }

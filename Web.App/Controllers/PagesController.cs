@@ -9,11 +9,14 @@ using System.Web;
 using System.Web.Mvc;
 using CoreLayer.Entities.Page;
 using RepositoryLayer.DataContext;
+using Web.App.Filters;
 using Web.App.Security;
 
 namespace Web.App.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
+    [LoginFilter]
+    [LogFilter]
     public class PagesController : BaseController
     {
 

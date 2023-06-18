@@ -110,7 +110,7 @@ namespace ServiceLayer.Services
             var result = (from s in await _sharedRepository.GetAllAsync()
                           join u in await _userRepository.GetAllAsync()
                           on s.UserId equals u.Id
-                          where s.UserId== userId
+                          where s.UserId== userId && !s.IsDeleted
                           select new SharedListDto
                           {
                                Description = s.Description,

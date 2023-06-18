@@ -22,13 +22,21 @@
                         <a class="nav-link active" aria-current="page" href="/Home/Index">Anasayfa</a>
                     </li>
                     @{Html.RenderAction("NavbarLinks", "Home");}
-
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Kullanıcı İşlemleri
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/User/Profile">Profilim</a></li>
+                            @{int[] roles = { 1, 3 };
+                                int role = Convert.ToInt32(Session["RoleId"]);
+                            }
+                            @if (roles.Contains(role))
+                            {
+                                <li><a class="dropdown-item" href="/Pages/Index">Sayfa Yönetimi</a></li>
+                                <li><a class="dropdown-item" href="/Pages/Index">Mail Şablonları</a></li>
+
+                            }
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="/Auth/Logout">Çıkış Yap</a></li>
                         </ul>

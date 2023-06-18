@@ -23,14 +23,12 @@ namespace RepositoryLayer.Repositories
         {
             _dbSet.Add(entity);
             await _db.SaveChangesAsync() ;
-            _db.Dispose();
         }
 
         public async Task AddRangeAsync(IEnumerable<T> values)
         {
             _dbSet.AddRange(values);
             await _db.SaveChangesAsync() ;
-            _db.Dispose();
 
         }
 
@@ -43,7 +41,6 @@ namespace RepositoryLayer.Repositories
         {
             _dbSet.Remove(_dbSet.Find(id));
             await _db.SaveChangesAsync();
-            _db.Dispose();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -60,7 +57,6 @@ namespace RepositoryLayer.Repositories
         {
             _db.Entry(entity).State = EntityState.Modified;
             var data= await _db.SaveChangesAsync();
-            _db.Dispose();
         }
 
         public IQueryable<T> Where(Expression<Func<T, bool>> expression)

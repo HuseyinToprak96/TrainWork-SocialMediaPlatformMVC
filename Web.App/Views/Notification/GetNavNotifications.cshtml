@@ -9,8 +9,21 @@
         <ul class="dropdown-menu">
             @foreach (var item in Model)
             {
-                <li class="mt-1"><a class="dropdown-item" style="box-shadow:1px 1px 1px 1px;background-color:  @(!item.IsSeen?"lightsteelblue":"")" href="/User/Profile">@(item.Content.Length>27?item.Content+"...":item.Content)</a></li>
-
-            }
+                if (item.notificationType != CoreLayer.Enum.ENotificationType.Follow)
+                {
+                <li class="mt-1">
+                    @{
+                        var routes = item.Link.Split('/');
+                    }
+                    <a href="/Bildirim/@routes[0]/@routes[1]" class="dropdown-item" style="box-shadow:1px 1px 1px 1px;background-color:  @(!item.IsSeen ? "lightsteelblue" : "")">@(item.Content.Length > 20 ? item.Content.Substring(0, 17) + "..." : item.Content)</a>
+                </li>
+                }
+                else
+                {
+        <li class="mt-1">
+            <a href="/Bildirim/@item.Link" class="dropdown-item" style="box-shadow:1px 1px 1px 1px;background-color:  @(!item.IsSeen ? "lightsteelblue" : "")">@(item.Content.Length > 20 ? item.Content.Substring(0, 17) + "..." : item.Content)</a>
+        </li>
+                }
+             }
         </ul>
     </li>

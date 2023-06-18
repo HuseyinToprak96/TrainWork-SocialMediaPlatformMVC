@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLayer.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace CoreLayer.Dtos.Notification
         public string Content { get; set; }
         public string Link { get; set; }
         public bool IsSeen { get; set; }
+        public ENotificationType notificationType { get; set; }
     }
 }

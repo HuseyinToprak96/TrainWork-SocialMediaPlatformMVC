@@ -1,0 +1,15 @@
+﻿@model PagingModel<YourModel>
+
+<h2>Veri Listesi</h2>
+
+@foreach (var item in Model.Items)
+{
+    <p>@item.Name</p>
+}
+
+<div class="pagination">
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <a href="@Url.Action("Index", new { pageNumber = i, pageSize = Model.PageSize })">@i</a>
+    }
+</div>

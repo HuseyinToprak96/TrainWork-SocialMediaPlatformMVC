@@ -16,7 +16,9 @@ using WebGrease.Css.Extensions;
 
 namespace Web.App.Controllers
 {
-    [AllowAnonymous]
+    [LoginFilter]
+    [Authorize]
+    [LogFilter]
     [RoutePrefix("Home")]
     public class HomeController : BaseController
     {
@@ -24,13 +26,9 @@ namespace Web.App.Controllers
         public async Task<ActionResult> Index()
         {
             int userId = Convert.ToInt32(Session["UserId"]);
-            if (userId > 0)
-            {
                 var shareds = await _sharedService.HomeSharedList(userId);
                 var users = await _userService.GetRecommendedPeople(userId);
                 return View(Tuple.Create<IEnumerable<SharedListDto>, IEnumerable<RecommendedPeopleDto>>(shareds.Data, users.Data));
-            }
-            return Redirect("/");
         }
         [HttpPost]
         public async Task<ActionResult> Index(SharedFilterDto sharedFilterDto)
@@ -87,11 +85,12 @@ namespace Web.App.Controllers
             var userResult = await _userService.GetAsync(data.UserId);
             if (data.TopCommentId == 0)
             {
-                await _notificationService.AddAsync(new CoreLayer.Entities.Notification.Notification { NotificationType = ENotificationType.Comment, UserId = sharedResult.Data.UserId, Link = data.SharedId.ToString(), Content = userResult.Data.Username + " adlı kullanıcı " + sharedResult.Data.Title + " başlıklı gönderinize yorum yaptı." });
+                
+                await _notificationService.AddAsync(new CoreLayer.Entities.Notification.Notification { NotificationType = ENotificationType.Comment, UserId = sharedResult.Data.UserId, Link =$"{sharedResult.Data.Title}/#Comment_{result.Data.Id}", Content = userResult.Data.Username + " adlı kullanıcı " + sharedResult.Data.Title + " başlıklı gönderinize yorum yaptı." });
             }
             else
             {
-                await _notificationService.AddAsync(new CoreLayer.Entities.Notification.Notification { NotificationType = ENotificationType.CommentAnswer, UserId = sharedResult.Data.UserId, Link = data.SharedId.ToString(), Content = userResult.Data.Username + " adlı kullanıcı yorumunuza cevap verdi." });
+                await _notificationService.AddAsync(new CoreLayer.Entities.Notification.Notification { NotificationType = ENotificationType.CommentAnswer, UserId = sharedResult.Data.UserId, Link = $"{sharedResult.Data.Title}/#Answer_{result.Data.Id}", Content = userResult.Data.Username + " adlı kullanıcı yorumunuza cevap verdi." });
             }
             return Json(result.Data);
         }
@@ -104,7 +103,7 @@ namespace Web.App.Controllers
             if (result.Data)
             {
                 var user = await _userService.GetAsync(userId);
-                await _notificationService.AddAsync(new CoreLayer.Entities.Notification.Notification { NotificationType = ENotificationType.Follow, Link = userId.ToString(), UserId = id, Content = user.Data.Username + " adlı kullanıcı sizi takip etti." });
+                await _notificationService.AddAsync(new CoreLayer.Entities.Notification.Notification { NotificationType = ENotificationType.Follow, Link = $"User_{id}", UserId = id, Content = user.Data.Username + " adlı kullanıcı sizi takip etti." });
                 return Json(1);
             }
             else
@@ -130,7 +129,7 @@ namespace Web.App.Controllers
                 var userResult=await _userService.GetAsync(userId);
                 await _notificationService.AddAsync(new CoreLayer.Entities.Notification.Notification
                 {
-                    Link = SharedId.ToString(),
+                    Link = sharedResult.Data.Title+"/Like_"+userId,
                     NotificationType = ENotificationType.Like,
                     UserId = sharedResult.Data.UserId,
                     Content = userResult.Data.Username+" adlı kullanıcı "+sharedResult.Data.Title+" başlıklı gönderinizi beğendi!"

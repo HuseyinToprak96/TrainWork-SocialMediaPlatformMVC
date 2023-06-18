@@ -8,18 +8,16 @@ using System.Web.Security;
 
 namespace Web.App.Filters
 {
-    public class LogoutFilter:ActionFilterAttribute
+    public class LogoutFilter:AuthorizeAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            if (!FormsAuthentication.IsEnabled)
+            if (!httpContext.User.Identity.IsAuthenticated)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary{
-                    {"action","Index" },
-                    { "controller","Home"}
-                });
+                return true;
             }
-            base.OnActionExecuting(context);
+
+            return false;
         }
     }
 }

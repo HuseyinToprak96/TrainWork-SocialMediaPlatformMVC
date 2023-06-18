@@ -14,6 +14,7 @@ using Web.App.Filters;
 namespace Web.App.Controllers
 {
     [AllowAnonymous]
+    [LogoutFilter]
     public class AuthController : BaseController
     {
         // GET: User
@@ -30,6 +31,7 @@ namespace Web.App.Controllers
             {
                 FormsAuthentication.SetAuthCookie(user.Data.Id.ToString(),false,"UserId");
                 Session["UserId"]=user.Data.Id;
+                Session["RoleId"]=user.Data.RoleId;
                 return Redirect(returnUrl!=""?returnUrl:"/Home/Index");
             }
             return View();
